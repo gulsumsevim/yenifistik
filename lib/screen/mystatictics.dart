@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'product_statistics_screen.dart';
 import 'field_statistics_screen.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 class StatisticsScreen extends StatelessWidget {
   @override
@@ -14,7 +13,6 @@ class StatisticsScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          
           SizedBox(height: 16.0),
           Card(
             color: Color.fromARGB(255, 255, 240, 219),
@@ -30,26 +28,11 @@ class StatisticsScreen extends StatelessWidget {
               ),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.black),
               onTap: () {
-                  Navigator.push(
-                    
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                    
-                      builder: (context) => MaterialApp(
-                          debugShowCheckedModeBanner: false,
-                        
-                        localizationsDelegates: [
-                          
-                          GlobalMaterialLocalizations.delegate,
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                        ],
-                        supportedLocales: [
-                          const Locale('tr', 'TR'), // Türkçe
-                        ],
-                        locale: const Locale('tr', 'TR'),
-                        home: FieldStatisticsScreen(),
-                      )),
+                    builder: (context) => FieldStatisticsScreen(),
+                  ),
                 );
               },
             ),
@@ -59,35 +42,3 @@ class StatisticsScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

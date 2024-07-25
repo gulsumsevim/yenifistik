@@ -168,7 +168,7 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context, true); // Geri dönüldüğünde true değeri gönder
+            Navigator.pop(context); // Geri dönüldüğünde önceki sayfaya dön
           },
         ),
       ),
@@ -367,7 +367,6 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
-      locale: const Locale('tr', 'TR'),
     );
 
     if (pickedDate != null && pickedDate != initialDate) {
