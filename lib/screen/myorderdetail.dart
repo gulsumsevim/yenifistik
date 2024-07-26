@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:fistikpazar/models/myorder_model.dart';
+import 'package:fistikpazar/services/login_services.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class OrderDetailPage extends StatelessWidget {
   final Order order;
@@ -26,7 +29,7 @@ class OrderDetailPage extends StatelessWidget {
             SizedBox(height: 16),
             buildOrderStatus(order.orderStatus),
             SizedBox(height: 16),
-            buildProductList(order.orderProducts),
+            buildProductList(order.orderProducts, context),
           ],
         ),
       ),
@@ -89,7 +92,6 @@ class OrderDetailPage extends StatelessWidget {
         buildStatusStep(Icons.kitchen, 'Sipariş hazırlanıyor', status >= 2, 'Sipariş kontrol edildi', Colors.orange),
         buildStatusStep(Icons.local_shipping, 'Sipariş kargoya verildi', status >= 3, 'Ürünler henüz hazırlanmadı', Colors.grey),
         buildStatusStep(Icons.check_circle, 'Sipariş teslim edildi', status >= 4, 'Ürünler henüz hazırlanmadı', Colors.grey),
-        
       ],
     );
   }
@@ -144,14 +146,14 @@ class OrderDetailPage extends StatelessWidget {
     );
   }
 
-  Widget buildProductList(List<OrderProduct> products) {
+  Widget buildProductList(List<OrderProduct> products, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: products.map((product) => buildProductCard(product)).toList(),
+      children: products.map((product) => buildProductCard(product, context)).toList(),
     );
   }
 
-  Widget buildProductCard(OrderProduct product) {
+  Widget buildProductCard(OrderProduct product, BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 4,
@@ -183,18 +185,61 @@ class OrderDetailPage extends StatelessWidget {
             ),
             SizedBox(width: 10),
             ElevatedButton(
-              onPressed: () {
-                // Ürün hazırlandı işlemi
+              onPressed: () async {
+                await updateOrderProductStatus(product.orderProductId, context);
               },
-              child: Text('Ürün hazırlandı'),
-              style: ElevatedButton.styleFrom(backgroundColor: Color.fromARGB(255, 255, 240, 219),),
+              child: Text('Ürün hazırla'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 144, 238, 144),
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  Future<void> updateOrderProductStatus(int orderProductId, BuildContext context) async {
+    final String? token = await ApiService.getToken(); // Token alınması
+
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Token alınamadı')),
+      );
+      return;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/UpdateOrderProductStatus'),
+        headers: {
+          'accept': 'text/plain',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          "orderProductId": orderProductId,
+          "orderStatus": 2 // Durumu 2 olarak güncelliyoruz (Sipariş hazırlanıyor)
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ürün durumu değişti')),
+        );
+        Navigator.of(context).pop();
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => OrderDetailPage(order: order)),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ürün durumu güncellenirken bir hata oluştu: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Bir hata oluştu: $e')),
+      );
+    }
+  }
 }
-
-
-
