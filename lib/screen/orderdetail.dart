@@ -273,15 +273,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ),
             ),
             SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () {
-                // Ürün hazırlandı işlemi
-              },
-              child: Text('Ürün hazırlandı'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 255, 240, 219),
-              ),
-            ),
+            
           ],
         ),
       ),

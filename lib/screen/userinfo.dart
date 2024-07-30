@@ -174,8 +174,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
         leading: Icon(icon, color: Colors.grey[700]),
         title: Text(label),
         subtitle: Text(value ?? ''),
-        trailing:
-            Icon(Icons.arrow_forward_ios, color: Colors.grey[700], size: 16),
+        
+           
       ),
     );
   }

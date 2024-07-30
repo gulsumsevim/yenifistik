@@ -209,23 +209,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RatingBar.builder(
-              initialRating: 0,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              onRatingUpdate: (rating) {
-                this.rating = rating;
-              },
-            ),
-          ],
+          
         ),
         SizedBox(height: 8),
         Row(
