@@ -103,8 +103,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       children: [
         buildStatusStep(Icons.receipt, 'Sipariş alındı', orderStatus >= 1, 'Sipariş kontrol edildi', Colors.green, 1, context),
         buildStatusStep(Icons.kitchen, 'Sipariş hazırlanıyor', orderStatus >= 2, 'Sipariş hazırlanıyor', Colors.orange, 2, context),
-        buildStatusStep(Icons.local_shipping, 'Sipariş kargoya verildi', orderStatus >= 3, 'Sipariş kargoya verildi', Colors.grey, 3, context),
-        buildStatusStep(Icons.check_circle, 'Sipariş teslim edildi', orderStatus >= 4, 'Sipariş teslim edildi', Colors.grey, 4, context),
+        buildStatusStep(Icons.local_shipping, 'Sipariş kargoya verildi', orderStatus >= 3, 'Sipariş kargoya verildi', Color.fromARGB(255, 209, 191, 29), 3, context),
+        buildStatusStep(Icons.check_circle, 'Sipariş teslim edildi', orderStatus >= 4, 'Sipariş teslim edildi', Colors.blue, 4, context),
         buildStatusStep(Icons.cancel, 'Sipariş iptal edildi', orderStatus >= 5, 'Sipariş iptal edildi', Colors.red, 5, context),
       ],
     );
@@ -178,40 +178,52 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   Widget buildProductCard(OrderProduct product, BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      elevation: 4,
-      color: Color.fromARGB(255, 255, 240, 219),
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            product.pictureUrl.isNotEmpty
-                ? Image.network(product.pictureUrl, fit: BoxFit.cover, width: 60, height: 60)
-                : Container(
-                    width: 60,
-                    height: 60,
-                    color: Colors.grey,
-                    child: Center(child: Icon(Icons.image)),
-                  ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(product.productName, style: TextStyle(fontWeight: FontWeight.bold)),
-                  SizedBox(height: 4),
-                  Text('${product.amount} x ${product.price}₺', style: TextStyle(color: Colors.grey[600])),
-                  Text('Toplam: ${(product.amount * product.price).toStringAsFixed(2)}₺', style: TextStyle(fontWeight: FontWeight.bold)),
-                ],
-              ),
+  return Card(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    elevation: 4,
+    color: Color.fromARGB(255, 255, 240, 219),
+    margin: const EdgeInsets.symmetric(vertical: 8),
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          product.pictureUrl.isNotEmpty
+              ? Image.network(product.pictureUrl, fit: BoxFit.cover, width: 60, height: 60)
+              : Container(
+                  width: 60,
+                  height: 60,
+                  color: Colors.grey,
+                  child: Center(child: Icon(Icons.image)),
+                ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(product.productName, style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 4),
+                Text('${product.amount} x ${product.price}₺', style: TextStyle(color: Colors.grey[600])),
+                Text('Toplam: ${(product.amount * product.price).toStringAsFixed(2)}₺', style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
             ),
-          ],
-        ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Ürünü hazırla işlemini burada yapabilirsiniz.
+              prepareProduct(product);
+            },
+            child: Text('Ürünü Hazırla'),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+void prepareProduct(OrderProduct product) {
+  // Ürünü hazırla işlemleri burada yapılabilir.
+  print('Ürünü hazırlama işlemi başlatıldı: ${product.productName}');
+}
 
   Future<void> updateOrderStatus(int orderId, int orderStatus, BuildContext context) async {
     final String? token = await ApiService.getToken(); // Token alınması
