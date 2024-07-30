@@ -113,7 +113,7 @@ class _DigitalAdvisorScreenState extends State<DigitalAdvisorScreen> {
     final response = await http.post(
       Uri.parse('https://api.openai.com/v1/chat/completions'),
       headers: {
-               'Authorization': 'Bearer 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', // API anahtarınızı buraya ekleyin
+        'Authorization': 'Bearer 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', // API anahtarınızı buraya ekleyin
         'Content-Type': 'application/json',
       },
       body: requestBody,
@@ -144,30 +144,50 @@ class _DigitalAdvisorScreenState extends State<DigitalAdvisorScreen> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _selectedImage == null
-                        ? Text('Resim seçilmedi.')
-                        : Image.file(_selectedImage!),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _pickImage,
-                      child: Text('Resim Seç'),
+                    Card(
+                      margin: EdgeInsets.all(16.0),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            _selectedImage == null
+                                ? Text('Resim seçilmedi.')
+                                : Image.file(_selectedImage!),
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: _pickImage,
+                              child: Text('Resim Seç'),
+                            ),
+                            SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: _uploadImageAndGetProblem,
+                              child: Text('Sorunu Bul'),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    ElevatedButton(
-                      onPressed: _uploadImageAndGetProblem,
-                      child: Text('Sorunu Bul'),
-                    ),
-                    SizedBox(height: 20),
-                    _responseMessage == null
-                        ? Text('AI cevabı burada görünecek.')
-                        : Container(
-                            padding: const EdgeInsets.all(16.0),
-                            child: SingleChildScrollView(
-                              child: Text(
-                                _responseMessage!,
-                                style: TextStyle(fontSize: 14),
-                              ),
+                    if (_responseMessage != null)
+                      Card(
+                        margin: EdgeInsets.all(16.0),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: SingleChildScrollView(
+                            child: Text(
+                              _responseMessage!,
+                              style: TextStyle(fontSize: 14),
                             ),
                           ),
+                        ),
+                      ),
                   ],
                 ),
         ),
