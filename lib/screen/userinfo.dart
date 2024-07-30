@@ -1,8 +1,10 @@
 import 'package:fistikpazar/models/user%C4%B1nfo_model.dart';
+
 import 'package:fistikpazar/screen/profileedit.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fistikpazar/services/userinfo_services.dart';
+import 'dart:io';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   late Future<UserInfo?> userInfoFuture;
   final UserService userService = UserService();
   String? token;
+  UserInfo? userInfo;
 
   @override
   void initState() {
@@ -25,27 +28,38 @@ class _UserProfilePageState extends State<UserProfilePage> {
     token = prefs.getString('token');
 
     if (token != null) {
-      setState(() {
-        userInfoFuture = userService.getUserInfo(token!);
-      });
+      userInfoFuture = userService.getUserInfo(token!);
+      userInfo = await userInfoFuture;
+      setState(() {});
     } else {
       print('Token is null');
     }
   }
 
-  void _navigateToEditProfile(UserInfo userInfo) {
-    Navigator.push(
+  void _navigateToEditProfile(UserInfo userInfo) async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              EditProfilePage(userInfo: userInfo, token: token!)),
-    ).then((value) {
-      if (value != null && value == true) {
-        setState(() {
-          userInfoFuture = userService.getUserInfo(token!);
-        });
-      }
-    });
+          builder: (context) => EditProfilePage(
+                userInfo: userInfo,
+                token: token!,
+                onUpdateUserInfo: (updatedUserInfo) {
+                  setState(() {
+                    this.userInfo = updatedUserInfo;
+                    // Güncellenmiş resim yerel dosya olarak gösteriliyor
+                    userInfo.picture = updatedUserInfo.picture!.contains('http')
+                        ? updatedUserInfo.picture
+                        : updatedUserInfo.picture;
+                  });
+                },
+              )),
+    );
+
+    if (result == true) {
+      setState(() {
+        userInfoFuture = userService.getUserInfo(token!);
+      });
+    }
   }
 
   @override
@@ -70,25 +84,29 @@ class _UserProfilePageState extends State<UserProfilePage> {
       ),
       body: token == null
           ? Center(child: CircularProgressIndicator())
-          : FutureBuilder<UserInfo?>(
-              future: userInfoFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Hata: ${snapshot.error}'));
-                } else if (snapshot.hasData) {
-                  UserInfo? userInfo = snapshot.data;
-                  return userInfo != null
-                      ? SingleChildScrollView(
-                          child: _buildUserInfo(userInfo),
-                        )
-                      : Center(child: Text('Kullanıcı bilgisi bulunamadı'));
-                } else {
-                  return Center(child: Text('Bilinmeyen bir hata oluştu'));
-                }
-              },
-            ),
+          : userInfo == null
+              ? FutureBuilder<UserInfo?>(
+                  future: userInfoFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Hata: ${snapshot.error}'));
+                    } else if (snapshot.hasData) {
+                      userInfo = snapshot.data;
+                      return userInfo != null
+                          ? SingleChildScrollView(
+                              child: _buildUserInfo(userInfo!),
+                            )
+                          : Center(child: Text('Kullanıcı bilgisi bulunamadı'));
+                    } else {
+                      return Center(child: Text('Bilinmeyen bir hata oluştu'));
+                    }
+                  },
+                )
+              : SingleChildScrollView(
+                  child: _buildUserInfo(userInfo!),
+                ),
     );
   }
 
@@ -101,9 +119,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
             radius: 50,
             backgroundImage:
                 userInfo.picture != null && userInfo.picture!.isNotEmpty
-                    ? NetworkImage(userInfo.picture!)
-                    : AssetImage('assets/default_profile.png')
-                        as ImageProvider, // Default profil resmi
+                    ? _getImageProvider(userInfo.picture!)
+                    : AssetImage('assets/default_profile.png'), // Default profil resmi
           ),
           SizedBox(height: 16),
           _buildProfileField(Icons.person, 'Ad', userInfo.name),
@@ -124,8 +141,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               foregroundColor:
                   MaterialStateProperty.all<Color>(Colors.black), // Metin rengi
               padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 12)), // İç kenar boşlukları
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 12)), // İç kenar boşlukları
               textStyle: MaterialStateProperty.all<TextStyle>(
                   TextStyle(fontSize: 18)), // Metin stili
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -139,6 +155,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ],
       ),
     );
+  }
+
+  ImageProvider _getImageProvider(String path) {
+    if (path.startsWith('http')) {
+      return NetworkImage(path);
+    } else {
+      return FileImage(File(path));
+    }
   }
 
   Widget _buildProfileField(IconData icon, String label, String? value) {

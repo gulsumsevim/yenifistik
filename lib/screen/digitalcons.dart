@@ -38,6 +38,7 @@ class _DigitalAdvisorScreenState extends State<DigitalAdvisorScreen> {
       final uploadResponse = await _uploadImage();
       if (uploadResponse != null && uploadResponse.containsKey('imageUrl')) {
         final imageUrl = uploadResponse['imageUrl'];
+        print('Image URL: $imageUrl'); // URL'yi kontrol etmek için ekledik
         final problemResponse = await _getProblemFromAi(imageUrl);
 
         setState(() {
@@ -72,11 +73,12 @@ class _DigitalAdvisorScreenState extends State<DigitalAdvisorScreen> {
     );
 
     request.headers['Authorization'] = 'Bearer $token';
+    request.headers['accept'] = '*/*';
 
     var pic = await http.MultipartFile.fromPath(
       "formFile",
       _selectedImage!.path,
-      contentType: MediaType('image', 'jpeg'), // uygun content type belirtin
+      contentType: MediaType('image', 'jpeg'),
     );
 
     request.files.add(pic);
@@ -88,33 +90,42 @@ class _DigitalAdvisorScreenState extends State<DigitalAdvisorScreen> {
       print('Response Data: $responseData'); // Bu satırı ekleyerek responseData'nın içeriğini kontrol edin
       return jsonDecode(responseData);
     } else {
+      var responseData = await response.stream.bytesToString();
       print('Resim yükleme başarısız: ${response.statusCode}');
+      print('Response body: $responseData');
       return null;
     }
   }
 
   Future<String> _getProblemFromAi(String imageUrl) async {
+    final requestBody = jsonEncode({
+      "model": "gpt-4",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Bu resimdeki bitkinin ne gibi bir sorunu var? \n\n![Resim]($imageUrl)"
+        }
+      ],
+    });
+
+    print('Request Body: $requestBody'); // Gönderilen veriyi kontrol etmek için ekledik
+
     final response = await http.post(
       Uri.parse('https://api.openai.com/v1/chat/completions'),
       headers: {
-        'Authorization': 'Bearer YOUR_OPENAI_API_KEY', // API anahtarınızı buraya ekleyin
+               'Authorization': 'Bearer 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', // API anahtarınızı buraya ekleyin
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        "model": "gpt-4-turbo",
-        "messages": [
-          {
-            "role": "user",
-            "content": "Bu resimdeki bitkinin ne gibi bir sorunu var? Nasıl düzeltebilirim? neden böyle oldu? bir daha böyle olmaması için ne gibi önlemler almalıyım? tüm sorularımı tek tek cevapla. \n\n![Resim]($imageUrl)"
-          }
-        ],
-      }),
+      body: requestBody,
     );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(utf8.decode(response.bodyBytes));
+      print('Response Data from AI: $data'); // OpenAI API'sinin yanıtını kontrol edin
       return data['choices'][0]['message']['content'];
     } else {
+      print('AI image problem request failed: ${response.statusCode}');
+      print('Response body: ${response.body}');
       throw Exception('AI image problem request failed: ${response.statusCode}');
     }
   }
