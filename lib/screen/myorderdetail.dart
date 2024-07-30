@@ -4,10 +4,23 @@ import 'package:fistikpazar/services/login_services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class OrderDetailPage extends StatelessWidget {
+class OrderDetailPage extends StatefulWidget {
   final Order order;
 
   OrderDetailPage({required this.order});
+
+  @override
+  _OrderDetailPageState createState() => _OrderDetailPageState();
+}
+
+class _OrderDetailPageState extends State<OrderDetailPage> {
+  late Order order;
+
+  @override
+  void initState() {
+    super.initState();
+    order = widget.order;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +40,7 @@ class OrderDetailPage extends StatelessWidget {
           children: [
             buildOrderSummary(order),
             SizedBox(height: 16),
-            buildOrderStatus(order.orderStatus),
+            buildOrderStatus(order.orderStatus, context),
             SizedBox(height: 16),
             buildProductList(order.orderProducts, context),
           ],
@@ -84,19 +97,20 @@ class OrderDetailPage extends StatelessWidget {
     );
   }
 
-  Widget buildOrderStatus(int status) {
+  Widget buildOrderStatus(int orderStatus, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildStatusStep(Icons.receipt, 'Sipariş alındı', status >= 1, 'Sipariş kontrol edildi', Colors.green),
-        buildStatusStep(Icons.kitchen, 'Sipariş hazırlanıyor', status >= 2, 'Sipariş kontrol edildi', Colors.orange),
-        buildStatusStep(Icons.local_shipping, 'Sipariş kargoya verildi', status >= 3, 'Ürünler henüz hazırlanmadı', Colors.grey),
-        buildStatusStep(Icons.check_circle, 'Sipariş teslim edildi', status >= 4, 'Ürünler henüz hazırlanmadı', Colors.grey),
+        buildStatusStep(Icons.receipt, 'Sipariş alındı', orderStatus >= 1, 'Sipariş kontrol edildi', Colors.green, 1, context),
+        buildStatusStep(Icons.kitchen, 'Sipariş hazırlanıyor', orderStatus >= 2, 'Sipariş hazırlanıyor', Colors.orange, 2, context),
+        buildStatusStep(Icons.local_shipping, 'Sipariş kargoya verildi', orderStatus >= 3, 'Sipariş kargoya verildi', Colors.grey, 3, context),
+        buildStatusStep(Icons.check_circle, 'Sipariş teslim edildi', orderStatus >= 4, 'Sipariş teslim edildi', Colors.grey, 4, context),
+        buildStatusStep(Icons.cancel, 'Sipariş iptal edildi', orderStatus >= 5, 'Sipariş iptal edildi', Colors.red, 5, context),
       ],
     );
   }
 
-  Widget buildStatusStep(IconData icon, String title, bool isActive, String description, Color color) {
+  Widget buildStatusStep(IconData icon, String title, bool isActive, String description, Color color, int status, BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -142,6 +156,16 @@ class OrderDetailPage extends StatelessWidget {
             ],
           ),
         ),
+        if (!isActive && status == order.orderStatus + 1 && order.orderStatus != 5)
+          ElevatedButton(
+            onPressed: () async {
+              await updateOrderStatus(order.orderId, status, context);
+            },
+            child: Text('Onayla'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: color,
+            ),
+          ),
       ],
     );
   }
@@ -183,23 +207,13 @@ class OrderDetailPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () async {
-                await updateOrderProductStatus(product.orderProductId, context);
-              },
-              child: Text('Ürün hazırla'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 144, 238, 144),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  Future<void> updateOrderProductStatus(int orderProductId, BuildContext context) async {
+  Future<void> updateOrderStatus(int orderId, int orderStatus, BuildContext context) async {
     final String? token = await ApiService.getToken(); // Token alınması
 
     if (token == null) {
@@ -210,30 +224,36 @@ class OrderDetailPage extends StatelessWidget {
     }
 
     try {
-      final response = await http.post(
-        Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/UpdateOrderProductStatus'),
+      final response = await http.put(
+        Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/UpdateOrderStatus'),
         headers: {
           'accept': 'text/plain',
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
-          "orderProductId": orderProductId,
-          "orderStatus": 2 // Durumu 2 olarak güncelliyoruz (Sipariş hazırlanıyor)
+          "orderId": orderId,
+          "orderStatus": orderStatus
         }),
       );
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ürün durumu değişti')),
+          SnackBar(content: Text('Sipariş durumu güncellendi')),
         );
-        Navigator.of(context).pop();
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => OrderDetailPage(order: order)),
-        );
+
+        // Durum güncellendikten sonra bir sonraki duruma geçiş
+        setState(() {
+          order = order.copyWith(orderStatus: orderStatus);
+        });
+
+        // Aşağı kaydırma
+        Future.delayed(Duration(milliseconds: 500), () {
+          Scrollable.ensureVisible(context, duration: Duration(seconds: 1));
+        });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ürün durumu güncellenirken bir hata oluştu: ${response.statusCode}')),
+          SnackBar(content: Text('Sipariş durumu güncellenirken bir hata oluştu: ${response.statusCode}')),
         );
       }
     } catch (e) {

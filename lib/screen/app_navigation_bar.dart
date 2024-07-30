@@ -1,4 +1,4 @@
-import 'package:fistikpazar/screen/app_colors.dart';
+/*import 'package:fistikpazar/screen/app_colors.dart';
 import 'package:fistikpazar/screen/app_defaults.dart';
 import 'package:fistikpazar/screen/app_icons.dart';
 import 'package:fistikpazar/screen/bottom_app_bar_item.dart';
@@ -60,3 +60,4 @@ class AppBottomNavigationBar extends StatelessWidget {
     );
   }
 }
+*/

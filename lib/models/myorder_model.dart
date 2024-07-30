@@ -80,4 +80,36 @@ class Order {
           .toList(),
     );
   }
+
+  Order copyWith({
+    int? orderId,
+    int? userId,
+    String? province,
+    String? township,
+    String? fullAddress,
+    String? email,
+    String? fullName,
+    String? orderNote,
+    int? orderStatus,
+    double? totalPrice,
+    String? invoice,
+    DateTime? createdDate,
+    List<OrderProduct>? orderProducts,
+  }) {
+    return Order(
+      orderId: orderId ?? this.orderId,
+      userId: userId ?? this.userId,
+      province: province ?? this.province,
+      township: township ?? this.township,
+      fullAddress: fullAddress ?? this.fullAddress,
+      email: email ?? this.email,
+      fullName: fullName ?? this.fullName,
+      orderNote: orderNote ?? this.orderNote,
+      orderStatus: orderStatus ?? this.orderStatus,
+      totalPrice: totalPrice ?? this.totalPrice,
+      invoice: invoice ?? this.invoice,
+      createdDate: createdDate ?? this.createdDate,
+      orderProducts: orderProducts ?? this.orderProducts,
+    );
+  }
 }

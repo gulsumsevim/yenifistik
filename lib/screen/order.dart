@@ -130,7 +130,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
         statusColor = Colors.red;
         break;
       default:
-        statusText = 'Sipariş iptal edildi';
+        statusText = 'Sipariş alındı';
         statusColor = Colors.red;
     }
 

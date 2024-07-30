@@ -139,7 +139,7 @@ class _PanelScreenState extends State<MyOrderScreen> {
   switch (status) {
     case 1:
       statusText = 'Sipariş alındı';
-      statusColor = Colors.green;
+      statusColor = Colors.brown;
       break;
     case 2:
       statusText = 'Sipariş hazırlanıyor';
@@ -158,8 +158,8 @@ class _PanelScreenState extends State<MyOrderScreen> {
       statusColor = Colors.red;
       break;
     default:
-      statusText = 'Sipariş iptal edildi';
-      statusColor = Colors.red;
+      statusText = 'Sipariş alındı';
+      statusColor = Colors.brown;
   }
 
   return Row(

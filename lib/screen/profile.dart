@@ -143,8 +143,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => CardListPage()),
-                );}
-                else if (title == 'Yorumlarım') {
+                );
+              } else if (title == 'Yorumlarım') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => CommentListScreen()),
