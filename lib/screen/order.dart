@@ -3,6 +3,7 @@ import 'package:fistikpazar/screen/orderdetail.dart';
 import 'package:fistikpazar/services/order_services.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class OrderListScreen extends StatefulWidget {
   @override
@@ -15,7 +16,10 @@ class _OrderListScreenState extends State<OrderListScreen> {
   @override
   void initState() {
     super.initState();
-    futureOrders = OrderService().getAllOrders();
+    initializeDateFormatting('tr_TR', null).then((_) {
+      futureOrders = OrderService().getAllOrders();
+      setState(() {});
+    });
   }
 
   @override
@@ -85,7 +89,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              DateFormat('dd MMMM yyyy HH:mm').format(DateTime.parse(order.createdDate!)),
+                              DateFormat('dd MMMM yyyy HH:mm', 'tr_TR').format(DateTime.parse(order.createdDate!)),
                               style: TextStyle(fontSize: 16, color: Colors.grey),
                             ),
                             SizedBox(height: 8),

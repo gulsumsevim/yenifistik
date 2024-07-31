@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -80,6 +81,14 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
   }
 
   Future<void> _submitOrder() async {
+    // Alanların boş olup olmadığını kontrol et
+    if (_selectedProvince == null || _selectedTownship == null || _addressController.text.isEmpty ||
+        _nameController.text.isEmpty || _surnameController.text.isEmpty || _cardNumberController.text.isEmpty ||
+        _expiryMonthController.text.isEmpty || _expiryYearController.text.isEmpty || _cvcController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lütfen tüm alanları doldurun')));
+      return;
+    }
+
     final String? token = await _getToken();
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Token alınamadı')));
@@ -275,6 +284,10 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(16),
+                ],
               ),
               SizedBox(height: 10),
               Row(
@@ -287,6 +300,10 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(2),
+                      ],
                     ),
                   ),
                   SizedBox(width: 10),
@@ -298,6 +315,10 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(2),
+                      ],
                     ),
                   ),
                   SizedBox(width: 10),
@@ -309,6 +330,10 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
                     ),
                   ),
                 ],

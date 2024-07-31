@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fistikpazar/screen/login_page.dart';
 import 'package:fistikpazar/models/myorder_model.dart';
 import 'package:fistikpazar/services/myorder_services.dart';
+import 'package:intl/intl.dart';
 
 class PanelPage extends StatelessWidget {
   @override
@@ -251,10 +252,7 @@ class _PanelScreenState extends State<PanelimScreen> {
                                             comment.advisorComment,
                                             style: TextStyle(fontSize: 16),
                                           ),
-                                          Text(
-                                            'Tarih: ${comment.createdDate}',
-                                            style: TextStyle(color: Colors.grey),
-                                          ),
+                                          
                                         ],
                                       ),
                                     ),

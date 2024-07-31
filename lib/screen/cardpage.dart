@@ -55,6 +55,33 @@ class _CardListPageState extends State<CardListPage> {
     });
   }
 
+  void _showDeleteConfirmationDialog(int cardId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Emin misiniz?'),
+          content: Text('Bu kartı silmek istediğinizden emin misiniz?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Hayır'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Modalı kapat
+              },
+            ),
+            TextButton(
+              child: Text('Evet'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Modalı kapat
+                _deleteCard(cardId); // Kartı sil
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _deleteCard(int cardId) async {
     try {
       await _cardService.deleteCard(cardId);
@@ -157,7 +184,7 @@ class _CardListPageState extends State<CardListPage> {
                             SizedBox(width: 10),
                             Expanded(
                               child: ElevatedButton.icon(
-                                onPressed: () => _deleteCard(card.cardId!),
+                                onPressed: () => _showDeleteConfirmationDialog(card.cardId!),
                                 icon: Icon(Icons.delete),
                                 label: Text('Sil'),
                                 style: ElevatedButton.styleFrom(

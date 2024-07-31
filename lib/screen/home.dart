@@ -1,9 +1,12 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:fistikpazar/screen/admin.dart';
+import 'package:fistikpazar/screen/advisor_screen.dart';
 import 'package:fistikpazar/screen/basket.dart';
 import 'package:fistikpazar/screen/favorite.dart';
 import 'package:fistikpazar/screen/producerpanel.dart';
 import 'package:fistikpazar/screen/product.dart';
 import 'package:fistikpazar/screen/profile.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,23 +23,22 @@ class CustomerHomePage extends StatelessWidget {
     _pageController.dispose();
   }
 
-  Future<bool> _isFarmer() async {
+  Future<int?> _getRoleId() async {
     final prefs = await SharedPreferences.getInstance();
-    int? roleId = prefs.getInt('roleId');
-    return roleId == 2;
+    return prefs.getInt('roleId');
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: _isFarmer(),
+    return FutureBuilder<int?>(
+      future: _getRoleId(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Bir hata oluştu.'));
         } else {
-          bool isFarmer = snapshot.data ?? false;
+          int? roleId = snapshot.data;
 
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -48,7 +50,9 @@ class CustomerHomePage extends StatelessWidget {
                   BasketsPage(),
                   FavoritesScreen(),
                   ProfilePage(),
-                  if (isFarmer) PanelPage(),
+                  if (roleId == 2) PanelPage(), // Farmer panel
+                  if (roleId == 3) AdvisorPage(), // Advisor panel
+                  if (roleId == 7) AdminPage(), // Admin panel
                 ],
               ),
               bottomNavigationBar: CurvedNavigationBar(
@@ -77,18 +81,37 @@ class CustomerHomePage extends StatelessWidget {
                     size: 30,
                     color: Colors.blue,
                   ),
-                  if (isFarmer)
+                  if (roleId == 2)
                     Icon(
                       CupertinoIcons.rectangle_grid_2x2,
                       size: 30,
                       color: Colors.green,
                     ),
+                  if (roleId == 3)
+                    Icon(
+                      Icons.assessment,
+                      size: 30,
+                      color: Colors.green,
+                    ),
+                  if (roleId == 7)
+                    Icon(
+                      Icons.admin_panel_settings,
+                      size: 30,
+                      color: Colors.green,
+                    ),
                 ],
                 onTap: (index) {
-                  if (!isFarmer && index == 4) {
-                    return;
+                  int pageIndex = index;
+                  if (roleId == 2 && index == 4) {
+                    pageIndex = 4; // Farmer panel
+                  } else if (roleId == 3 && index == 4) {
+                    pageIndex = 5; // Advisor panel
+                  } else if (roleId == 7 && index == 4) {
+                    pageIndex = 6; // Admin panel
+                  } else if (index >= 4) {
+                    return; // Invalid access for non-authorized roles
                   }
-                  _pageController.animateToPage(index,
+                  _pageController.animateToPage(pageIndex,
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeOut);
                 },

@@ -22,6 +22,7 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
   List<FieldInfo> fieldNames = [];
   List<FlSpot> dataPoints = [];
   bool _isLoading = true;
+  bool _isAnalyzing = false; // Yorumlama işlemi için eklendi
   List<Map<String, dynamic>> mqttTopics = []; // mqttTopics listesini saklamak için
   String? chartAnalysis;
 
@@ -101,8 +102,6 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
       dataPoints = (data as List).mapIndexed((index, data) {
         return FlSpot(index.toDouble(), double.parse(data['payload']));
       }).toList();
-
-      await analyzeChart();
     } else {
       // Hata mesajı işleme
       print('Failed to fetch data points: ${response.statusCode}');
@@ -123,6 +122,10 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
   }
 
   Future<void> analyzeChart() async {
+    setState(() {
+      _isAnalyzing = true;
+    });
+
     final response = await http.post(
       Uri.parse('https://api.openai.com/v1/chat/completions'),
       headers: {
@@ -137,13 +140,12 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
             'content': 'Bu grafik verilerini analiz et: ${dataPoints.map((e) => e.y).toList()}'
           }
         ],
-        'max_tokens':500,
+        'max_tokens': 500,
       }),
     );
 
     if (response.statusCode == 200) {
-    
-       final jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      final jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
       final analysis = jsonResponse['choices'][0]['message']['content'];
       setState(() {
         chartAnalysis = analysis;
@@ -151,6 +153,10 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
     } else {
       print('Failed to analyze chart: ${response.statusCode}');
     }
+
+    setState(() {
+      _isAnalyzing = false;
+    });
   }
 
   @override
@@ -260,29 +266,76 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
                                       ],
                                       titlesData: FlTitlesData(
                                         leftTitles: AxisTitles(
-                                          sideTitles: SideTitles(showTitles: true),
+                                          sideTitles: SideTitles(
+                                            showTitles: true,
+                                            reservedSize: 40,
+                                            getTitlesWidget: (value, meta) {
+                                              return Text(
+                                                value.toStringAsFixed(1),
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                ),
+                                              );
+                                            },
+                                          ),
                                         ),
                                         bottomTitles: AxisTitles(
-                                          sideTitles: SideTitles(showTitles: true),
+                                          sideTitles: SideTitles(
+                                            showTitles: true,
+                                            reservedSize: 30,
+                                            getTitlesWidget: (value, meta) {
+                                              return Text(
+                                                value.toStringAsFixed(1),
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      gridData: FlGridData(show: true),
+                                      borderData: FlBorderData(
+                                        show: true,
+                                        border: Border.all(
+                                          color: Colors.black,
+                                          width: 1,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
                                 SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: _isAnalyzing ? null : analyzeChart,
+                                  child: _isAnalyzing ? CircularProgressIndicator() : Text('Yorumla'),
+                                ),
+                                SizedBox(height: 16),
                                 if (chartAnalysis != null)
-                                  Text(
-                                    'Yorum:',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                if (chartAnalysis != null)
-                                  Text(
-                                    chartAnalysis!,
-                                    style: TextStyle(
-                                      fontSize: 14,
+                                  Card(
+                                    margin: EdgeInsets.only(top: 16.0),
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Yorum:',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            chartAnalysis!,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                               ],

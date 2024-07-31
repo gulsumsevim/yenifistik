@@ -105,7 +105,7 @@ class _LandsScreenState extends State<LandsScreen> {
                           SizedBox(height: 5),
                           Text('Alan: ${field.area} m²'),
                           Text('Ağaç Sayısı: ${field.numberOfTree}'),
-                          Text('Lokasyon: ${field.location}'),
+                         
                         ],
                       ),
                       trailing: IconButton(

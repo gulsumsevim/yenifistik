@@ -1,3 +1,4 @@
+import 'package:fistikpazar/screen/productdetails.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -199,6 +200,15 @@ class _CommentListScreenState extends State<CommentListScreen> {
     );
   }
 
+  void navigateToProductDetail(int productId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductDetailPage(productId: productId),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,6 +261,12 @@ class _CommentListScreenState extends State<CommentListScreen> {
                         icon: Icon(Icons.delete),
                         onPressed: () {
                           deleteComment(comment.commentId);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.remove_red_eye),
+                        onPressed: () {
+                          navigateToProductDetail(comment.productId);
                         },
                       ),
                     ],

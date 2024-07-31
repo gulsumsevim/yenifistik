@@ -53,6 +53,9 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
         final responseBody = jsonDecode(response.body);
 
         if (responseBody['code'] == "200") {
+          _oldPasswordController.clear();
+          _newPasswordController.clear();
+          _confirmPasswordController.clear();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Şifre başarıyla değiştirildi')),
           );
@@ -103,7 +106,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   labelText: 'Eski Şifre',
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isOldPasswordObscured ? Icons.visibility : Icons.visibility_off,
+                      _isOldPasswordObscured ? Icons.visibility_off : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {
@@ -126,7 +129,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   labelText: 'Yeni Şifre',
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isNewPasswordObscured ? Icons.visibility : Icons.visibility_off,
+                      _isNewPasswordObscured ? Icons.visibility_off : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {
@@ -149,7 +152,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   labelText: 'Yeni Şifre (Tekrar)',
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isConfirmPasswordObscured ? Icons.visibility : Icons.visibility_off,
+                      _isConfirmPasswordObscured ? Icons.visibility_off : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {

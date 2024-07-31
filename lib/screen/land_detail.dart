@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fistikpazar/models/lands_model.dart';
 import 'package:fistikpazar/services/lands_services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LandsScreen extends StatefulWidget {
   @override
@@ -16,21 +17,19 @@ class _LandsScreenState extends State<LandsScreen> {
     futureFields = FieldService.getFields();
   }
 
-  void _showEditFieldDialog(FieldInfo field) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        insetPadding: EdgeInsets.all(10),
-        backgroundColor: Colors.transparent,
-        child: EditFieldPage(field: field),
+  void _navigateToEditFieldPage(FieldInfo field) async {
+    bool? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditFieldPage(field: field),
       ),
-    ).then((value) {
-      if (value != null && value == true) {
-        setState(() {
-          futureFields = FieldService.getFields();
-        });
-      }
-    });
+    );
+
+    if (result != null && result) {
+      setState(() {
+        futureFields = FieldService.getFields();
+      });
+    }
   }
 
   @override
@@ -51,7 +50,6 @@ class _LandsScreenState extends State<LandsScreen> {
             return Center(child: Text('Araziler bulunamadı.'));
           } else {
             List<FieldInfo> fields = snapshot.data!;
-            print('Fetched ${fields.length} fields.');
             return ListView.builder(
               itemCount: fields.length,
               itemBuilder: (context, index) {
@@ -81,7 +79,7 @@ class _LandsScreenState extends State<LandsScreen> {
                         ],
                       ),
                       onTap: () {
-                        _showEditFieldDialog(field);
+                        _navigateToEditFieldPage(field);
                       },
                     ),
                   ),
@@ -132,6 +130,15 @@ class _EditFieldPageState extends State<EditFieldPage> {
   }
 
   void _updateField() async {
+    if (_nameController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        _areaController.text.isEmpty ||
+        _numberOfTreeController.text.isEmpty ||
+        _locationController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lütfen tüm alanları doldurun')));
+      return;
+    }
+
     final updatedField = FieldInfo(
       userId: widget.field.userId,
       fieldId: widget.field.fieldId,
@@ -152,19 +159,27 @@ class _EditFieldPageState extends State<EditFieldPage> {
     }
   }
 
+  void _showLocation() async {
+    String googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=${_locationController.text}";
+    if (await canLaunch(googleMapsUrl)) {
+      await launch(googleMapsUrl);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Harita açılamıyor')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Araziyi Düzenle'),
+        backgroundColor: Colors.green,
       ),
-      child: Container(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Araziyi Düzenle', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 20),
             TextField(
               controller: _nameController,
               decoration: InputDecoration(labelText: 'Adı'),
@@ -186,6 +201,11 @@ class _EditFieldPageState extends State<EditFieldPage> {
             TextField(
               controller: _locationController,
               decoration: InputDecoration(labelText: 'Lokasyon'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _showLocation,
+              child: Text('Lokasyonu Gör'),
             ),
             SizedBox(height: 20),
             Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fistikpazar/models/card_model.dart';
 import 'package:fistikpazar/services/card_services.dart';
 
@@ -17,6 +18,7 @@ class _AddCardPageState extends State<AddCardPage> {
   String? _cvc;
 
   final CardService _cardService = CardService();
+  final TextEditingController _cardNumberController = TextEditingController();
 
   void _addCard() async {
     if (_formKey.currentState!.validate()) {
@@ -87,6 +89,7 @@ class _AddCardPageState extends State<AddCardPage> {
               ),
               SizedBox(height: 10),
               TextFormField(
+                controller: _cardNumberController,
                 decoration: InputDecoration(
                   labelText: 'Kart Numarası',
                   labelStyle: TextStyle(color: Colors.red),
@@ -95,6 +98,10 @@ class _AddCardPageState extends State<AddCardPage> {
                   ),
                 ),
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(16),
+                ],
                 onChanged: (value) {
                   _cardNumber = value;
                 },
@@ -102,8 +109,8 @@ class _AddCardPageState extends State<AddCardPage> {
                   if (value == null || value.isEmpty) {
                     return 'Kart numarası gerekli';
                   }
-                  if (value.length < 16 || value.length > 19) {
-                    return 'Geçerli bir kart numarası giriniz';
+                  if (value.length != 16) {
+                    return 'Geçerli bir kart numarası giriniz (16 haneli)';
                   }
                   return null;
                 },
@@ -121,6 +128,10 @@ class _AddCardPageState extends State<AddCardPage> {
                         ),
                       ),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(2),
+                      ],
                       onChanged: (value) {
                         _month = value;
                       },
@@ -147,6 +158,10 @@ class _AddCardPageState extends State<AddCardPage> {
                         ),
                       ),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(2),
+                      ],
                       onChanged: (value) {
                         _year = value;
                       },
@@ -155,8 +170,8 @@ class _AddCardPageState extends State<AddCardPage> {
                           return 'Yıl gerekli';
                         }
                         int? year = int.tryParse(value);
-                        if (year == null || year < 2024 || year > 2030) {
-                          return 'Geçerli bir yıl giriniz (2024-2030)';
+                        if (year == null || year < 24 || year > 34) {
+                          return 'Geçerli bir yıl giriniz (24-34)';
                         }
                         return null;
                       },
@@ -173,6 +188,10 @@ class _AddCardPageState extends State<AddCardPage> {
                         ),
                       ),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
                       onChanged: (value) {
                         _cvc = value;
                       },
