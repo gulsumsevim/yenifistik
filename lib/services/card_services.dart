@@ -4,10 +4,10 @@ import 'package:fistikpazar/services/login_services.dart';
 import 'package:http/http.dart' as http;
 
 class CardService {
-  final String apiUrl = 'http://fruitmanagement.softsense.com.tr/api/Card/GetCardInfo';
-  final String updateCardUrl = 'http://fruitmanagement.softsense.com.tr/api/Card/UpdateCardInfo';
-  final String deleteCardUrl = 'http://fruitmanagement.softsense.com.tr/api/Card/DeleteCard';
-  final String addCardUrl = 'http://fruitmanagement.softsense.com.tr/api/Card/AddCardInfo';
+  final String apiUrl = 'https://api.fistikpazar.com/api/Card/GetCardInfo';
+  final String updateCardUrl = 'https://api.fistikpazar.com/api/Card/UpdateCardInfo';
+  final String deleteCardUrl = 'https://api.fistikpazar.com/api/Card/DeleteCard';
+  final String addCardUrl = 'https://api.fistikpazar.com/api/Card/AddCardInfo';
 
   Future<CrediCard> getAllCreditcard() async {
     try {

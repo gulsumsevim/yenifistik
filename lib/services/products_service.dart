@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:fistikpazar/models/product_model.dart';
 
 class ProductService {
-  static const String baseUrl = 'http://fruitmanagement.softsense.com.tr/api';
+  static const String baseUrl = 'https://api.fistikpazar.com/api';
   static const String getAllProductUrl = '$baseUrl/Customer/GetAllProduct';
   static const String getProductByIdUrl = '$baseUrl/Customer/GetProductById';
   static const String addProductToBasketUrl = '$baseUrl/Customer/AddProductToBasket';

@@ -29,7 +29,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
       final token = prefs.getString('token') ?? '';
 
       final response = await http.post(
-        Uri.parse('http://fruitmanagement.softsense.com.tr/api/Auth/ChangePassword'),
+        Uri.parse('https://api.fistikpazar.com/api/Auth/ChangePassword'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'text/plain',

@@ -24,7 +24,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
   Future<void> fetchProvinces() async {
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Address/SehirleriListele'),
+      Uri.parse('https://api.fistikpazar.com/api/Address/SehirleriListele'),
       headers: {
         'accept': 'text/plain',
       },
@@ -43,7 +43,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
   Future<void> fetchTownships(int provinceId) async {
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Address/IlceleriListele'),
+      Uri.parse('https://api.fistikpazar.com/api/Address/IlceleriListele'),
       headers: {
         'accept': 'text/plain',
         'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     int townshipId = townships.firstWhere((township) => township['townshipName'] == selectedTownship)['townshipId'];
 
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Address/AddAdressInfo'),
+      Uri.parse('https://api.fistikpazar.com/api/Address/AddAdressInfo'),
       headers: {
         'accept': 'text/plain',
         'Content-Type': 'application/json',

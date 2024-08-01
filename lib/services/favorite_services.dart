@@ -4,8 +4,8 @@ import 'package:fistikpazar/services/login_services.dart';
 import 'package:http/http.dart' as http;
 
 class FavoritesService {
-  static const String apiUrl = "http://fruitmanagement.softsense.com.tr/api/Customer/GetMyLikedProduct";
-  static const String removeFavoriteUrl = "http://fruitmanagement.softsense.com.tr/api/Customer/RemoveLikeTheProduct";
+  static const String apiUrl = "https://api.fistikpazar.com/api/Customer/GetMyLikedProduct";
+  static const String removeFavoriteUrl = "https://api.fistikpazar.com/api/Customer/RemoveLikeTheProduct";
 
   Future<List<Favorites>> getAllFavorites() async {
     try {

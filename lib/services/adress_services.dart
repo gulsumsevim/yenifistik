@@ -4,9 +4,9 @@ import 'package:fistikpazar/services/login_services.dart';
 import 'package:http/http.dart' as http;
 
 class AddressService {
-  static const String apiUrl = "http://fruitmanagement.softsense.com.tr/api/Address/GetAddress";
-  static const String updateUrl = "http://fruitmanagement.softsense.com.tr/api/Address/UpdateAddress";
-  static const String deleteUrl = "http://fruitmanagement.softsense.com.tr/api/Address/DeleteAddress";
+  static const String apiUrl = "https://api.fistikpazar.com/api/Address/GetAddress";
+  static const String updateUrl = "https://api.fistikpazar.com/api/Address/UpdateAddress";
+  static const String deleteUrl = "https://api.fistikpazar.com/api/Address/DeleteAddress";
 
   Future<List<Addresses>> getAllAddresses() async {
     try {

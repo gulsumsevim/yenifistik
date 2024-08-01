@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "http://fruitmanagement.softsense.com.tr/api";
+  static const String baseUrl = "https://api.fistikpazar.com/api";
 
   Future<Login> loginUser(String email, String password, bool rememberMe) async {
     final String loginUrl = "$baseUrl/Auth/Login";

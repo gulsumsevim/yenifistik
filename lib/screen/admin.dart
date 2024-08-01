@@ -28,7 +28,7 @@ class _AdminPageState extends State<AdminPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Admin/GetAllUserForAdmin'),
+      Uri.parse('https://api.fistikpazar.com/api/Admin/GetAllUserForAdmin'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',

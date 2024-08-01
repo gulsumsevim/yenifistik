@@ -4,7 +4,7 @@ import 'package:fistikpazar/services/login_services.dart';
 import 'package:http/http.dart' as http;
 
 class BasketService {
-  static const String apiUrl = "http://fruitmanagement.softsense.com.tr/api/Customer/GetProductsInCart";
+  static const String apiUrl = "https://api.fistikpazar.com/api/Customer/GetProductsInCart";
 
   Future<List<Baskets>> getAllBaskets() async {
     try {
@@ -47,7 +47,7 @@ class BasketService {
       }
 
       final response = await http.post(
-        Uri.parse("http://fruitmanagement.softsense.com.tr/api/Customer/AddProductToBasket"),
+        Uri.parse("https://api.fistikpazar.com/api/Customer/AddProductToBasket"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $_token',
@@ -73,7 +73,7 @@ class BasketService {
       }
 
       final response = await http.post(
-        Uri.parse("http://fruitmanagement.softsense.com.tr/api/Customer/DeleteProductFromBasket"),
+        Uri.parse("https://api.fistikpazar.com/api/Customer/DeleteProductFromBasket"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $_token',
@@ -100,7 +100,7 @@ class BasketService {
       }
 
       final response = await http.put(
-        Uri.parse("http://fruitmanagement.softsense.com.tr/api/Customer/UpdateNumberOfProduct"),
+        Uri.parse("https://api.fistikpazar.com/api/Customer/UpdateNumberOfProduct"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $_token',

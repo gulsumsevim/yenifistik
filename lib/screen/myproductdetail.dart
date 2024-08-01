@@ -69,7 +69,7 @@ class _MyProductDetailPageState extends State<MyProductDetailPage> {
     }
 
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/GetCampaign'),
+      Uri.parse('https://api.fistikpazar.com/api/Farmer/GetCampaign'),
       headers: {
         'accept': 'text/plain',
         'Authorization': 'Bearer $token',
@@ -164,7 +164,7 @@ class _MyProductDetailPageState extends State<MyProductDetailPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/AddCampaign'),
+      Uri.parse('https://api.fistikpazar.com/api/Farmer/AddCampaign'),
       headers: {
         'accept': 'text/plain',
         'Content-Type': 'application/json',
@@ -204,7 +204,7 @@ class _MyProductDetailPageState extends State<MyProductDetailPage> {
     }
 
     final response = await http.put(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/DeleteCampaignAsync'),
+      Uri.parse('https://api.fistikpazar.com/api/Farmer/DeleteCampaignAsync'),
       headers: {
         'accept': 'text/plain',
         'Content-Type': 'application/json',

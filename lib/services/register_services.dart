@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class RegisterService {
-  final String registerUrl = 'http://fruitmanagement.softsense.com.tr/api/Auth/Register';
+  final String registerUrl = 'https://api.fistikpazar.com/api/Auth/Register';
 
   Future<bool> register(String name, String surname, String phone, String email, String password) async {
     try {

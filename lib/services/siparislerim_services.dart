@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class OrderService {
-  static const String baseUrl = 'http://fruitmanagement.softsense.com.tr/api';
+  static const String baseUrl = 'https://api.fistikpazar.com/api';
   static const String getOrdersUrl = '$baseUrl/Farmer/GetOrderProductForFarmer';
 
   Future<List<Order>> getOrders() async {

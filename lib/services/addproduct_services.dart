@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://fruitmanagement.softsense.com.tr/api';
+  static const String baseUrl = 'https://api.fistikpazar.com/api';
 
   static Future<List<Map<String, dynamic>>> getCategories() async {
     final response = await http.get(

@@ -62,7 +62,7 @@ class _CommentListScreenState extends State<CommentListScreen> {
     }
 
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Customer/GetCommentForCustomer'),
+      Uri.parse('https://api.fistikpazar.com/api/Customer/GetCommentForCustomer'),
       headers: {
         'Authorization': 'Bearer $token',
         'accept': 'text/plain',
@@ -92,7 +92,7 @@ class _CommentListScreenState extends State<CommentListScreen> {
     }
 
     final response = await http.put(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Customer/DeleteComment'),
+      Uri.parse('https://api.fistikpazar.com/api/Customer/DeleteComment'),
       headers: {
         'Authorization': 'Bearer $token',
         'accept': 'text/plain',
@@ -121,7 +121,7 @@ class _CommentListScreenState extends State<CommentListScreen> {
     }
 
     final response = await http.put(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Customer/UpdateCommentToProduct'),
+      Uri.parse('https://api.fistikpazar.com/api/Customer/UpdateCommentToProduct'),
       headers: {
         'Authorization': 'Bearer $token',
         'accept': 'text/plain',

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CommentService {
-  static const String baseUrl = 'http://fruitmanagement.softsense.com.tr/api';
+  static const String baseUrl = 'https://api.fistikpazar.com/api';
   static const String getCommentsUrl = '$baseUrl/Farmer/GetAllAdvisorComment';
 
   static Future<List<Comment>> getAllComments() async {

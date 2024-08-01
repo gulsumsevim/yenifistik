@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 
 class MyProductService {
-  static const String baseUrl = 'http://fruitmanagement.softsense.com.tr/api';
+  static const String baseUrl = 'https://api.fistikpazar.com/api';
   static const String getMyAllProductUrl = '$baseUrl/Farmer/GetMyAllProduct';
   static const String addProductUrl = '$baseUrl/Farmer/AddProduct';
   static const String getProductDetailUrl = '$baseUrl/Farmer/GetProductById';

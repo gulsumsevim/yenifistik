@@ -35,7 +35,7 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
 
   Future<void> fetchDataTypes() async {
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/GetMqttTopicName'),
+      Uri.parse('https://api.fistikpazar.com/api/Farmer/GetMqttTopicName'),
       headers: {"accept": "text/plain"},
     );
 
@@ -82,7 +82,7 @@ class _FieldStatisticsScreenState extends State<FieldStatisticsScreen> {
     int topicId = _getTopicIdForSelectedDataType(selectedDataType);
 
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/GetMqttData'),
+      Uri.parse('https://api.fistikpazar.com/api/Farmer/GetMqttData'),
       headers: {
         'accept': 'text/plain',
         'Content-Type': 'application/json',

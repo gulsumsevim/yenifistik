@@ -93,6 +93,15 @@ class _LandsScreenState extends State<LandsScreen> {
   }
 }
 
+
+
+
+
+
+
+
+
+
 class EditFieldPage extends StatefulWidget {
   final FieldInfo field;
 
@@ -160,11 +169,28 @@ class _EditFieldPageState extends State<EditFieldPage> {
   }
 
   void _showLocation() async {
-    String googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=${_locationController.text}";
-    if (await canLaunch(googleMapsUrl)) {
-      await launch(googleMapsUrl);
+    final location = widget.field.location;
+    final url = _getMapsUrl(location);
+
+    if (await canLaunch(url)) {
+      await launch(url);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Harita açılamıyor')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('URL açma işlemi gerçekleştirilemiyor: $url')));
+      }
+    }
+  }
+
+  String _getMapsUrl(String location) {
+    final coordinatesRegex = RegExp(r'^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$');
+    
+    if (coordinatesRegex.hasMatch(location)) {
+      // Location is coordinates (latitude, longitude)
+      return 'https://www.google.com/maps/search/?api=1&query=$location';
+    } else {
+      // Location is an address
+      return 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location)}';
     }
   }
 
@@ -173,60 +199,66 @@ class _EditFieldPageState extends State<EditFieldPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Araziyi Düzenle'),
-        backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(labelText: 'Adı'),
-            ),
-            TextField(
-              controller: _addressController,
-              decoration: InputDecoration(labelText: 'Adres'),
-            ),
-            TextField(
-              controller: _areaController,
-              decoration: InputDecoration(labelText: 'Alan (m²)'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _numberOfTreeController,
-              decoration: InputDecoration(labelText: 'Ağaç Sayısı'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _locationController,
-              decoration: InputDecoration(labelText: 'Lokasyon'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _showLocation,
-              child: Text('Lokasyonu Gör'),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: _updateField,
-                  child: Text('Kaydet'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('İptal'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Araziyi Düzenle', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              SizedBox(height: 20),
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Adı'),
+              ),
+              TextField(
+                controller: _addressController,
+                decoration: InputDecoration(labelText: 'Adres'),
+              ),
+              TextField(
+                controller: _areaController,
+                decoration: InputDecoration(labelText: 'Alan (m²)'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: _numberOfTreeController,
+                decoration: InputDecoration(labelText: 'Ağaç Sayısı'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: _locationController,
+                decoration: InputDecoration(labelText: 'Lokasyon'),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: _updateField,
+                    child: Text('Kaydet'),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('İptal'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: _showLocation,
+                    child: Text('Konumu Gör'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

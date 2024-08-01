@@ -3,8 +3,8 @@ import 'package:fistikpazar/models/user%C4%B1nfo_model.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
-  static const String userInfoUrl = 'http://fruitmanagement.softsense.com.tr/api/Auth/UserInfo';
-  static const String updateUserInfoUrl = 'http://fruitmanagement.softsense.com.tr/api/Auth/UpdateUserInfo';
+  static const String userInfoUrl = 'https://api.fistikpazar.com/api/Auth/UserInfo';
+  static const String updateUserInfoUrl = 'https://api.fistikpazar.com/api/Auth/UpdateUserInfo';
 
   Future<UserInfo?> getUserInfo(String token) async {
     final response = await http.get(

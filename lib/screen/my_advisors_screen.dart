@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fistikpazar/models/lands_model.dart';
 
 class FieldService {
-  static const String baseUrl = 'http://fruitmanagement.softsense.com.tr/api';
+  static const String baseUrl = 'https://api.fistikpazar.com/api';
   static const String getFieldInfoUrl = '$baseUrl/Farmer/GetField';
   static const String getApprovalFieldInfoUrl = '$baseUrl/Farmer/GetApprovalFieldInfoForFarmer';
   static const String updateFieldInfoUrl = '$baseUrl/Farmer/UpdateFieldInfo';

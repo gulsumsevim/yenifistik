@@ -237,7 +237,7 @@ void prepareProduct(OrderProduct product) {
 
     try {
       final response = await http.put(
-        Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/UpdateOrderStatus'),
+        Uri.parse('https://api.fistikpazar.com/api/Farmer/UpdateOrderStatus'),
         headers: {
           'accept': 'text/plain',
           'Content-Type': 'application/json',

@@ -118,7 +118,7 @@ class _BasketsPageState extends State<BasketsPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Customer/AddProductToTempBasket'),
+      Uri.parse('https://api.fistikpazar.com/api/Customer/AddProductToTempBasket'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',

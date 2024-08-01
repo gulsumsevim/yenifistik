@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AdvisorService {
-  static const String baseUrl = 'http://fruitmanagement.softsense.com.tr/api/Farmer';
+  static const String baseUrl = 'https://api.fistikpazar.com/api/Farmer';
 
   static Future<List<Advisor>> getAdvisors() async {
     final String? token = await _getToken();

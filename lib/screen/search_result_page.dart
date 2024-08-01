@@ -105,7 +105,7 @@ class _ProductFiltersDialogState extends State<ProductFiltersDialog> {
 
   void _applyFilters(BuildContext context) async {
     // API isteği oluştur
-    var url = Uri.parse("http://fruitmanagement.softsense.com.tr/api/Customer/GetAllProduct");
+    var url = Uri.parse("https://api.fistikpazar.com/api/Customer/GetAllProduct");
     var response = await http.post(
       url,
       body: {

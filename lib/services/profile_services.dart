@@ -12,7 +12,7 @@ Future<bool> updateProfile(String name, String surname, String phone, String ema
   };
 
   var response = await http.post(
-    Uri.parse('http://fruitmanagement.softsense.com.tr/api/Auth/UpdateUserInfo'),
+    Uri.parse('https://api.fistikpazar.com/api/Auth/UpdateUserInfo'),
     headers: {
       'Content-Type': 'application/json',
     },

@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ImageUploadService {
-  static const String uploadUrl = 'http://fruitmanagement.softsense.com.tr/api/PictureAi/UploadImageWithoutIdForUser';
+  static const String uploadUrl = 'https://api.fistikpazar.com/api/PictureAi/UploadImageWithoutIdForUser';
 
   static Future<http.StreamedResponse> uploadImage(File imageFile) async {
     final prefs = await SharedPreferences.getInstance();

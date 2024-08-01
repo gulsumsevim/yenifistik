@@ -10,7 +10,7 @@ class ResetPasswordPage extends StatelessWidget {
     final TextEditingController _emailController = TextEditingController();
 
     Future<void> sendResetPasswordRequest(String email) async {
-      final url = Uri.parse('http://fruitmanagement.softsense.com.tr/api/Auth/PasswordForgot');
+      final url = Uri.parse('https://api.fistikpazar.com/api/Auth/PasswordForgot');
       final headers = {'Content-Type': 'application/json'};
       final body = json.encode({'email': email});
 

@@ -26,7 +26,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Admin/GetUserById'),
+      Uri.parse('https://api.fistikpazar.com/api/Admin/GetUserById'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',

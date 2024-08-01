@@ -27,7 +27,7 @@ class _ArazilerimPageState extends State<ArazilerimPage> {
     final token = prefs.getString('token');
 
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Advisor/GetApprovalFieldForAdvisor'),
+      Uri.parse('https://api.fistikpazar.com/api/Advisor/GetApprovalFieldForAdvisor'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'text/plain',
@@ -144,7 +144,7 @@ class _AraziDetayPageState extends State<AraziDetayPage> {
 
   Future<void> fetchDataTypes() async {
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/GetMqttTopicName'),
+      Uri.parse('https://api.fistikpazar.com/api/Farmer/GetMqttTopicName'),
       headers: {"accept": "text/plain"},
     );
 
@@ -177,7 +177,7 @@ class _AraziDetayPageState extends State<AraziDetayPage> {
     int topicId = _getTopicIdForSelectedDataType(selectedDataType);
 
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Farmer/GetMqttData'),
+      Uri.parse('https://api.fistikpazar.com/api/Farmer/GetMqttData'),
       headers: {
         'accept': 'text/plain',
         'Content-Type': 'application/json',
@@ -268,7 +268,7 @@ class _AraziDetayPageState extends State<AraziDetayPage> {
     final token = prefs.getString('token');
 
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Advisor/DeleteApproveFieldInfo'),
+      Uri.parse('https://api.fistikpazar.com/api/Advisor/DeleteApproveFieldInfo'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'text/plain',

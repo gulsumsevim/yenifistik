@@ -37,7 +37,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
 
   Future<void> _fetchProvinces() async {
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Address/SehirleriListele'),
+      Uri.parse('https://api.fistikpazar.com/api/Address/SehirleriListele'),
       headers: {
         'accept': 'text/plain',
       },
@@ -60,7 +60,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
 
   Future<void> _fetchTownships(int provinceId) async {
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Address/IlceleriListele'),
+      Uri.parse('https://api.fistikpazar.com/api/Address/IlceleriListele'),
       headers: {
         'accept': 'text/plain',
         'Content-Type': 'application/json',

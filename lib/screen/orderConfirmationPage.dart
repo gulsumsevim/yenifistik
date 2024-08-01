@@ -43,7 +43,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
 
   Future<void> _fetchProvinces() async {
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Address/SehirleriListele'),
+      Uri.parse('https://api.fistikpazar.com/api/Address/SehirleriListele'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -61,7 +61,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
 
   Future<void> _fetchTownships(int provinceId) async {
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Address/IlceleriListele'),
+      Uri.parse('https://api.fistikpazar.com/api/Address/IlceleriListele'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -99,7 +99,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
     final String expirationDate = "${_expiryMonthController.text}/${_expiryYearController.text}";
 
     final response = await http.post(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Customer/AddOrder'),
+      Uri.parse('https://api.fistikpazar.com/api/Customer/AddOrder'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',

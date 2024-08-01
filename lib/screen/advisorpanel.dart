@@ -23,7 +23,7 @@ class _PanelimPageState extends State<PanelimPage> {
     final token = prefs.getString('token');
 
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Advisor/GetNotApprovalFieldForAdvisor'),
+      Uri.parse('https://api.fistikpazar.com/api/Advisor/GetNotApprovalFieldForAdvisor'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'text/plain',
@@ -52,7 +52,7 @@ class _PanelimPageState extends State<PanelimPage> {
     final token = prefs.getString('token');
 
     final response = await http.put(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Advisor/ApprovalFieldStatus'),
+      Uri.parse('https://api.fistikpazar.com/api/Advisor/ApprovalFieldStatus'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'text/plain',

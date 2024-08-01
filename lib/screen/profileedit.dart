@@ -126,7 +126,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _uploadImage(File image, String token, int userId) async {
     final request = http.MultipartRequest(
       'PUT',
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Auth/UploadImageToProfile?userId=$userId'),
+      Uri.parse('https://api.fistikpazar.com/api/Auth/UploadImageToProfile?userId=$userId'),
     );
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Content-Type'] = 'multipart/form-data';

@@ -5,7 +5,7 @@ import 'package:fistikpazar/services/login_services.dart';
 import 'package:http/http.dart' as http;
 
 class OrderDetailService {
-  static const String apiUrl = "http://fruitmanagement.softsense.com.tr/api/Customer/GetOrderProductWithId";
+  static const String apiUrl = "https://api.fistikpazar.com/api/Customer/GetOrderProductWithId";
 
   Future<OrderDetail> getOrderDetail(int orderId) async {
     try {

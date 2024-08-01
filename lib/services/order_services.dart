@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderService {
-  static const String apiUrl = "http://fruitmanagement.softsense.com.tr/api/Customer/GetOrderId";
-  static const String cancelOrderUrl = "http://fruitmanagement.softsense.com.tr/api/Customer/MoveProductsFromTempBasketToBasket";
+  static const String apiUrl = "https://api.fistikpazar.com/api/Customer/GetOrderId";
+  static const String cancelOrderUrl = "https://api.fistikpazar.com/api/Customer/MoveProductsFromTempBasketToBasket";
 
   Future<Orders> getAllOrders() async {
     try {

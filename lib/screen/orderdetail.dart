@@ -34,7 +34,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       }
 
       final response = await http.put(
-        Uri.parse('http://fruitmanagement.softsense.com.tr/api/Customer/DeleteOrderId'),
+        Uri.parse('https://api.fistikpazar.com/api/Customer/DeleteOrderId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

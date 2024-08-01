@@ -24,7 +24,7 @@ class _ArazilerimPageState extends State<ArazilerimPage> {
     final token = prefs.getString('token');
 
     final response = await http.get(
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/Advisor/GetApprovalFieldForAdvisor'),
+      Uri.parse('https://api.fistikpazar.com/api/Advisor/GetApprovalFieldForAdvisor'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'text/plain',

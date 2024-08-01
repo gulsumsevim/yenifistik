@@ -69,7 +69,7 @@ class _DigitalAdvisorScreenState extends State<DigitalAdvisorScreen> {
 
     var request = http.MultipartRequest(
       'PUT',
-      Uri.parse('http://fruitmanagement.softsense.com.tr/api/PictureAi/UploadImageWithoutIdForUser'),
+      Uri.parse('https://api.fistikpazar.com/api/PictureAi/UploadImageWithoutIdForUser'),
     );
 
     request.headers['Authorization'] = 'Bearer $token';
