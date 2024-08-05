@@ -1,7 +1,9 @@
 import 'dart:async';
 
 
+import 'package:fistikpazar/screen/home.dart';
 import 'package:fistikpazar/screen/login_page.dart';
+import 'package:fistikpazar/screen/product.dart';
 
 import 'package:flutter/material.dart';
 
@@ -31,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => LoginPage(),
+          builder: (context) => CustomerHomePage(),
         ),
       );
     });
