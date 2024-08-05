@@ -7,8 +7,6 @@ import 'package:fistikpazar/screen/login_page.dart';
 import 'package:fistikpazar/screen/producerpanel.dart';
 import 'package:fistikpazar/screen/product.dart';
 import 'package:fistikpazar/screen/profile.dart';
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,12 +62,12 @@ class CustomerHomePage extends StatelessWidget {
                       controller: _pageController,
                       children: <Widget>[
                         ProductPage(),
-                        BasketsPage(),
+                        isLoggedIn ? BasketsPage() : LoginScreen(),
                         isLoggedIn ? FavoritesScreen() : LoginScreen(), // Show login screen if not logged in
                         isLoggedIn ? ProfilePage() : LoginScreen(), // Show login screen if not logged in
-                        if (roleId == 2) PanelPage(), // Farmer panel
-                        if (roleId == 3) AdvisorPage(), // Advisor panel
-                        if (roleId == 7) AdminPage(), // Admin panel
+                        if (roleId == 2) isLoggedIn ? PanelPage() : LoginScreen(), // Farmer panel
+                        if (roleId == 3) isLoggedIn ? AdvisorPage() : LoginScreen(), // Advisor panel
+                        if (roleId == 7) isLoggedIn ? AdminPage() : LoginScreen(), // Admin panel
                       ],
                     ),
                     bottomNavigationBar: CurvedNavigationBar(
