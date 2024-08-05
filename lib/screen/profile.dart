@@ -1,66 +1,20 @@
-import 'package:fistikpazar/models/colors.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fistikpazar/screen/adress.dart';
 import 'package:fistikpazar/screen/cardpage.dart';
 import 'package:fistikpazar/screen/commentpage.dart';
-import 'package:fistikpazar/screen/login_page.dart';
 import 'package:fistikpazar/screen/order.dart';
 import 'package:fistikpazar/screen/password_change.dart';
 import 'package:fistikpazar/screen/userinfo.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-void main() {
-  runApp(ProfilePage());
-}
+import 'package:fistikpazar/screen/home.dart';
 
 class ProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ProfileScreen(),
-    );
-  }
-}
-
-class ProfileScreen extends StatefulWidget {
-  @override
-  _ProfileScreenState createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  String profileName = 'Yükleniyor...';
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<void> _logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => LoginPage()),
-      (Route<dynamic> route) => false,
-    );
-  }
-
-  void showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 255, 240, 219),
-        elevation: 0,
-        title: Align(
+       title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Profil',
@@ -72,92 +26,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-        centerTitle: false,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              _logout(context);
+            },
+          ),
+        ],
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  _buildListTile(Icons.person, 'Bilgilerim', context),
-                  _buildListTile(Icons.home_filled, 'Adreslerim', context),
-                  _buildListTile(
-                    Icons.shopping_bag,
-                    'Siparişlerim',
-                    context,
-                  ),
-                  _buildListTile(Icons.payment, 'Kartlarım', context),
-                  _buildListTile(Icons.payment, 'Yorumlarım', context),
-                  _buildListTile(
-                    Icons.password,
-                    'Şifre değiştir',
-                    context,
-                  ),
-                  _buildListTile(
-                    Icons.logout,
-                    'Çıkış Yap',
-                    context,
-                    _logout,
-                  ),
-                ],
-              ),
-            ),
+      body: ListView(
+        padding: EdgeInsets.all(16.0),
+        children: [
+          _buildProfileButton(
+            context,
+            icon: Icons.person,
+            label: 'Bilgilerim',
+            destination: UserProfilePage(),
+          ),
+          _buildProfileButton(
+            context,
+            icon: Icons.home,
+            label: 'Adreslerim',
+            destination: AddressScreen(),
+          ),
+          _buildProfileButton(
+            context,
+            icon: Icons.shopping_bag,
+            label: 'Siparişlerim',
+            destination: OrderListScreen(),
+          ),
+          _buildProfileButton(
+            context,
+            icon: Icons.credit_card,
+            label: 'Kartlarım',
+            destination: CardListPage(),
+          ),
+          _buildProfileButton(
+            context,
+            icon: Icons.comment,
+            label: 'Yorumlarım',
+            destination: CommentListScreen(),
+          ),
+          _buildProfileButton(
+            context,
+            icon: Icons.lock,
+            label: 'Şifre değiştir',
+            destination: PasswordChangePage(),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildListTile(IconData icon, String title, BuildContext context,
-      [VoidCallback? onTap]) {
+  Widget _buildProfileButton(BuildContext context,
+      {required IconData icon,
+      required String label,
+      required Widget destination}) {
     return Card(
-      color: const Color.fromARGB(255, 255, 240, 219),
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+        color: const Color.fromARGB(255, 255, 240, 219),
+      margin: EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
-        leading: Icon(icon, color: colors),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        onTap: onTap ??
-            () {
-              if (title == 'Bilgilerim') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UserProfilePage()),
-                );
-              } else if (title == 'Adreslerim') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddressScreen()),
-                );
-              } else if (title == 'Siparişlerim') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => OrderListScreen()),
-                );
-              } else if (title == 'Kartlarım') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CardListPage()),
-                );
-              } else if (title == 'Yorumlarım') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CommentListScreen()),
-                );
-              } else if (title == 'Şifre değiştir') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PasswordChangePage()),
-                );
-              }
-            },
-        trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.green),
+        leading: Icon(icon, color: Colors.green),
+        title: Text(label),
+        trailing: Icon(Icons.arrow_forward_ios, color: Colors.green),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => destination),
+          );
+        },
       ),
+    );
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => CustomerHomePage()),
+      (Route<dynamic> route) => false,
     );
   }
 }
