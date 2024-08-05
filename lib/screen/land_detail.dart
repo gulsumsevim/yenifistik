@@ -2,6 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:fistikpazar/models/lands_model.dart';
 import 'package:fistikpazar/services/lands_services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+// Image data model
+class ImageData {
+  final String url;
+  final String fileName;
+
+  ImageData({required this.url, required this.fileName});
+
+  factory ImageData.fromJson(Map<String, dynamic> json) {
+    return ImageData(
+      url: json['url'],
+      fileName: json['fileName'],
+    );
+  }
+}
 
 class LandsScreen extends StatefulWidget {
   @override
@@ -93,15 +110,6 @@ class _LandsScreenState extends State<LandsScreen> {
   }
 }
 
-
-
-
-
-
-
-
-
-
 class EditFieldPage extends StatefulWidget {
   final FieldInfo field;
 
@@ -118,6 +126,8 @@ class _EditFieldPageState extends State<EditFieldPage> {
   late TextEditingController _numberOfTreeController;
   late TextEditingController _locationController;
 
+  late Future<List<ImageData>> futureImages;
+
   @override
   void initState() {
     super.initState();
@@ -126,6 +136,8 @@ class _EditFieldPageState extends State<EditFieldPage> {
     _areaController = TextEditingController(text: widget.field.area.toString());
     _numberOfTreeController = TextEditingController(text: widget.field.numberOfTree.toString());
     _locationController = TextEditingController(text: widget.field.location);
+
+    futureImages = fetchImages();
   }
 
   @override
@@ -136,6 +148,17 @@ class _EditFieldPageState extends State<EditFieldPage> {
     _numberOfTreeController.dispose();
     _locationController.dispose();
     super.dispose();
+  }
+
+  Future<List<ImageData>> fetchImages() async {
+    final response = await http.get(Uri.parse('https://api.fistikpazar.com/api/Farmer/list'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => ImageData.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load images');
+    }
   }
 
   void _updateField() async {
@@ -172,6 +195,8 @@ class _EditFieldPageState extends State<EditFieldPage> {
     final location = widget.field.location;
     final url = _getMapsUrl(location);
 
+    print(url); // Oluşturulan URL'yi terminalde yazdırarak doğrulayın.
+
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -184,10 +209,10 @@ class _EditFieldPageState extends State<EditFieldPage> {
 
   String _getMapsUrl(String location) {
     final coordinatesRegex = RegExp(r'^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$');
-    
+
     if (coordinatesRegex.hasMatch(location)) {
       // Location is coordinates (latitude, longitude)
-      return 'https://www.google.com/maps/search/?api=1&query=$location';
+      return 'https://www.google.com/maps/search/?api=1&query=${location}';
     } else {
       // Location is an address
       return 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location)}';
@@ -207,7 +232,6 @@ class _EditFieldPageState extends State<EditFieldPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Araziyi Düzenle', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               SizedBox(height: 20),
               TextField(
                 controller: _nameController,
@@ -257,6 +281,49 @@ class _EditFieldPageState extends State<EditFieldPage> {
                   ),
                 ],
               ),
+              SizedBox(height: 20),
+              FutureBuilder<List<ImageData>>(
+                future: futureImages,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('Resimler bulunamadı.'));
+                  } else {
+                    List<ImageData> images = snapshot.data!;
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 4.0,
+                        mainAxisSpacing: 4.0,
+                      ),
+                      itemCount: images.length,
+                      itemBuilder: (context, index) {
+                        ImageData image = images[index];
+                        return GestureDetector(
+                          onTap: () {
+                            // Resme tıklanınca yapılacak işlem
+                          },
+                          child: GridTile(
+                            child: Image.network(
+                              image.url,
+                              fit: BoxFit.cover,
+                            ),
+                            footer: GridTileBar(
+                              backgroundColor: Colors.black54,
+                              title: Text(image.fileName),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -264,3 +331,7 @@ class _EditFieldPageState extends State<EditFieldPage> {
     );
   }
 }
+
+void main() => runApp(MaterialApp(
+  home: LandsScreen(),
+));

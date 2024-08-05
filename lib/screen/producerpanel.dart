@@ -140,12 +140,7 @@ class _PanelScreenState extends State<PanelScreen> {
                     'Dijital Danışman',
                     context,
                   ),
-                  _buildListTile(
-                    Icons.logout,
-                    'Çıkış Yap',
-                    context,
-                    _logout,
-                  ),
+                  
                 ],
               ),
             ),
