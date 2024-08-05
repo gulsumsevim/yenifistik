@@ -17,7 +17,7 @@ class ProfilePage extends StatelessWidget {
        title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Profil',
+            'Profilim',
             style: TextStyle(
               fontFamily: 'Yellowtail-Regular.ttf',
               fontSize: 25.0,
