@@ -116,11 +116,14 @@ class _PanelScreenState extends State<PanelimScreen> {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(child: CircularProgressIndicator());
                             } else if (snapshot.hasError) {
+                              print('Order Error: ${snapshot.error}');
                               return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
                             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              print('Order Data: Boş');
                               return Center(child: Text('Veri bulunamadı.'));
                             } else {
                               final orders = snapshot.data!;
+                              print('Order Data: ${orders.length} adet sipariş alındı.');
                               return Column(
                                 children: orders.map((order) {
                                   return Card(
@@ -163,7 +166,13 @@ class _PanelScreenState extends State<PanelimScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Haftalık Beğeni Sayısı'),
+                                Text(
+                                  'Haftalık Beğeni Sayısı',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 SizedBox(
                                   height: 150,
                                   child: FutureBuilder<List<DailyLike>>(
@@ -172,31 +181,92 @@ class _PanelScreenState extends State<PanelimScreen> {
                                       if (snapshot.connectionState == ConnectionState.waiting) {
                                         return Center(child: CircularProgressIndicator());
                                       } else if (snapshot.hasError) {
+                                        print('DailyLikes Error: ${snapshot.error}');
                                         return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
                                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                        print('DailyLikes Data: Boş');
                                         return Center(child: Text('Veri bulunamadı.'));
                                       } else {
                                         final dailyLikes = snapshot.data!;
-                                        return LineChart(
-                                          LineChartData(
-                                            lineBarsData: [
-                                              LineChartBarData(
-                                                spots: dailyLikes.map((data) {
-                                                  final date = DateTime.parse(data.date.toIso8601String());
-                                                  return FlSpot(
-                                                    date.day.toDouble(),
-                                                    data.likeCount.toDouble(),
-                                                  );
-                                                }).toList(),
-                                                isCurved: true,
-                                                barWidth: 4,
-                                                color: Colors.green,
-                                                belowBarData: BarAreaData(
-                                                  show: true,
-                                                  color: Colors.green.withOpacity(0.3),
+                                        final List<BarChartGroupData> barGroups = [];
+
+                                        final daysOfWeek = ['pazartesi', 'salı', 'çarşamba', 'perşembe', 'cuma', 'cumartesi', 'pazar'];
+                                        final Map<String, int> likesPerDay = { for (var day in daysOfWeek) day: 0 };
+
+                                        for (var like in dailyLikes) {
+                                          final date = DateTime.parse(like.date.toIso8601String());
+                                          final day = DateFormat('EEEE', 'tr_TR').format(date).toLowerCase();
+                                          if (likesPerDay.containsKey(day)) {
+                                            likesPerDay[day] = like.likeCount;
+                                            print('Gün: $day, Beğeni: ${likesPerDay[day]}');
+                                          }
+                                        }
+
+                                        for (var i = 0; i < daysOfWeek.length; i++) {
+                                          barGroups.add(
+                                            BarChartGroupData(
+                                              x: i,
+                                              barRods: [
+                                                BarChartRodData(
+                                                  toY: likesPerDay[daysOfWeek[i]]!.toDouble(),
+                                                  color: Colors.blue,
+                                                  width: 20,
+                                                  borderRadius: BorderRadius.circular(0),
+                                                  backDrawRodData: BackgroundBarChartRodData(
+                                                    show: true,
+                                                    toY: 20,
+                                                    color: Colors.blue.withOpacity(0.1),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+
+                                        print('DailyLikes Data: ${dailyLikes.length} adet beğeni alındı.');
+                                        return BarChart(
+                                          BarChartData(
+                                            alignment: BarChartAlignment.spaceAround,
+                                            barGroups: barGroups,
+                                            titlesData: FlTitlesData(
+                                              leftTitles: AxisTitles(
+                                                axisNameWidget: Padding(
+                                                  padding: const EdgeInsets.only(left: 8.0),
+                                                  child: Text(
+                                                    'Haftalık Beğeni Sayısı',
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                                sideTitles: SideTitles(showTitles: false),
+                                              ),
+                                              rightTitles: AxisTitles(
+                                                sideTitles: SideTitles(showTitles: false),
+                                              ),
+                                              bottomTitles: AxisTitles(
+                                                sideTitles: SideTitles(
+                                                  showTitles: true,
+                                                  getTitlesWidget: (double value, TitleMeta meta) {
+                                                    final day = daysOfWeek[value.toInt()];
+                                                    return Padding(
+                                                      padding: const EdgeInsets.only(top: 8.0),
+                                                      child: Text(
+                                                        day,
+                                                        style: TextStyle(
+                                                          fontSize: 10,
+                                                          color: Colors.black,
+                                                        ),
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
                                               ),
-                                            ],
+                                            ),
+                                            borderData: FlBorderData(show: false),
+                                            gridData: FlGridData(show: false),
                                           ),
                                         );
                                       }
@@ -230,11 +300,14 @@ class _PanelScreenState extends State<PanelimScreen> {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(child: CircularProgressIndicator());
                             } else if (snapshot.hasError) {
+                              print('Comments Error: ${snapshot.error}');
                               return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
                             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              print('Comments Data: Boş');
                               return Center(child: Text('Veri bulunamadı.'));
                             } else {
                               final comments = snapshot.data!;
+                              print('Comments Data: ${comments.length} adet yorum alındı.');
                               return Column(
                                 children: comments.map((comment) {
                                   return Card(
