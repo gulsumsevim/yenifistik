@@ -1,10 +1,12 @@
 import 'package:fistikpazar/screen/productdetails.dart';
+import 'package:fistikpazar/services/basket_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fistikpazar/models/product_model.dart';
 import 'package:fistikpazar/screen/product_filters_dialog.dart';
 import 'package:fistikpazar/screen/ui_util.dart';
 import 'package:fistikpazar/services/products_service.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -20,11 +22,13 @@ class _ProductPageState extends State<ProductPage> {
   List<Products> products = [];
   List<Products> filteredProducts = [];
   Set<int> likedProducts = Set<int>(); // Set to store liked product IDs
+  Set<int> basketProducts = Set<int>(); // Set to store product IDs in the basket
 
   @override
   void initState() {
     super.initState();
     _loadLikedProducts();
+    _loadBasketProducts();
     ProductService.getAllProducts().then((retrievedProducts) {
       setState(() {
         products = retrievedProducts;
@@ -44,13 +48,30 @@ class _ProductPageState extends State<ProductPage> {
     }
   }
 
-  Future<void> _saveLikedProducts() async {
-    // Bu fonksiyon artık gerekli değil, API'yi kullanıyoruz
+  Future<void> _loadBasketProducts() async {
+    try {
+      final baskets = await BasketService().getAllBaskets();
+      setState(() {
+        basketProducts = baskets.map((basket) => basket.productId).toSet();
+      });
+    } catch (e) {
+      print('Sepet ürünleri yüklenirken bir hata oluştu: $e');
+    }
   }
 
   void _addToBasket(BuildContext context, int productId) async {
+    if (basketProducts.contains(productId)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ürün zaten sepette')),
+      );
+      return;
+    }
+
     try {
-      await ProductService.addProductToBasket(productId);
+      await BasketService().addToBasket(productId);
+      setState(() {
+        basketProducts.add(productId);
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ürün sepete eklendi')),
       );
@@ -161,6 +182,7 @@ class _ProductPageState extends State<ProductPage> {
                   return ProductCard(
                     product: filteredProducts[index],
                     isLiked: likedProducts.contains(filteredProducts[index].productId),
+                    isInBasket: basketProducts.contains(filteredProducts[index].productId),
                     onAddToBasket: (productId) {
                       _addToBasket(context, productId);
                     },
@@ -175,6 +197,7 @@ class _ProductPageState extends State<ProductPage> {
                         ),
                       ).then((_) {
                         _loadLikedProducts(); // Refresh the liked products when returning from the detail page
+                        _loadBasketProducts(); // Refresh the basket products when returning from the detail page
                         setState(() {}); // Refresh the state when returning from the detail page
                       });
                     },
@@ -192,6 +215,7 @@ class _ProductPageState extends State<ProductPage> {
 class ProductCard extends StatelessWidget {
   final Products product;
   final bool isLiked;
+  final bool isInBasket;
   final Function(int) onAddToBasket;
   final Function(int) onLikeProduct;
   final VoidCallback onTap;
@@ -200,6 +224,7 @@ class ProductCard extends StatelessWidget {
     Key? key,
     required this.product,
     required this.isLiked,
+    required this.isInBasket,
     required this.onAddToBasket,
     required this.onLikeProduct,
     required this.onTap,

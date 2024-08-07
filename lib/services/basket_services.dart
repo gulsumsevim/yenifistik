@@ -4,7 +4,10 @@ import 'package:fistikpazar/services/login_services.dart';
 import 'package:http/http.dart' as http;
 
 class BasketService {
-  static const String apiUrl = "https://api.fistikpazar.com/api/Customer/GetProductsInCart";
+  static const String getBasketProductsUrl = "https://api.fistikpazar.com/api/Customer/GetProductsInCart";
+  static const String addProductToBasketUrl = "https://api.fistikpazar.com/api/Customer/AddProductToBasket";
+  static const String removeProductFromBasketUrl = "https://api.fistikpazar.com/api/Customer/DeleteProductFromBasket";
+  static const String updateBasketQuantityUrl = "https://api.fistikpazar.com/api/Customer/UpdateNumberOfProduct";
 
   Future<List<Baskets>> getAllBaskets() async {
     try {
@@ -14,7 +17,7 @@ class BasketService {
       }
 
       final response = await http.get(
-        Uri.parse(apiUrl),
+        Uri.parse(getBasketProductsUrl),
         headers: {
           'Authorization': 'Bearer $_token',
         },
@@ -47,14 +50,12 @@ class BasketService {
       }
 
       final response = await http.post(
-        Uri.parse("https://api.fistikpazar.com/api/Customer/AddProductToBasket"),
+        Uri.parse(addProductToBasketUrl),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $_token',
         },
-        body: jsonEncode(<String, int>{
-          'productId': productId,
-        }),
+        body: jsonEncode(<String, int>{'productId': productId}),
       );
 
       if (response.statusCode != 200) {
@@ -73,14 +74,12 @@ class BasketService {
       }
 
       final response = await http.post(
-        Uri.parse("https://api.fistikpazar.com/api/Customer/DeleteProductFromBasket"),
+        Uri.parse(removeProductFromBasketUrl),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $_token',
         },
-        body: jsonEncode(<String, int>{
-          'basketId': basketId,
-        }),
+        body: jsonEncode(<String, int>{'basketId': basketId}),
       );
 
       if (response.statusCode != 200) {
@@ -91,7 +90,6 @@ class BasketService {
     }
   }
 
-
   Future<void> updateBasketQuantity(int basketId, int newQuantity) async {
     try {
       final String? _token = await ApiService.getToken();
@@ -100,15 +98,12 @@ class BasketService {
       }
 
       final response = await http.put(
-        Uri.parse("https://api.fistikpazar.com/api/Customer/UpdateNumberOfProduct"),
+        Uri.parse(updateBasketQuantityUrl),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $_token',
         },
-        body: jsonEncode(<String, int>{
-          'basketId': basketId,
-          'numberOfProduct': newQuantity,
-        }),
+        body: jsonEncode(<String, int>{'basketId': basketId, 'numberOfProduct': newQuantity}),
       );
 
       if (response.statusCode != 200) {
