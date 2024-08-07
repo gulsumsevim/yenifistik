@@ -1,5 +1,6 @@
-import 'package:fistikpazar/services/card_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fistikpazar/services/card_services.dart';
 import 'package:fistikpazar/models/card_model.dart';
 
 class EditCardPage extends StatefulWidget {
@@ -124,12 +125,16 @@ class _EditCardPageState extends State<EditCardPage> {
                   ),
                 ),
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(16),
+                ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Kart numarası gerekli';
                   }
-                  if (value.length < 16 || value.length > 19) {
-                    return 'Geçerli bir kart numarası giriniz';
+                  if (value.length != 16) {
+                    return 'Geçerli bir kart numarası giriniz (16 haneli)';
                   }
                   return null;
                 },
@@ -148,6 +153,10 @@ class _EditCardPageState extends State<EditCardPage> {
                         ),
                       ),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(2),
+                      ],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Ay gerekli';
@@ -172,13 +181,17 @@ class _EditCardPageState extends State<EditCardPage> {
                         ),
                       ),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(2),
+                      ],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Yıl gerekli';
                         }
                         int? year = int.tryParse(value);
-                        if (year == null || year < 2024 || year > 2030) {
-                          return 'Geçerli bir yıl giriniz (2024-2030)';
+                        if (year == null || year < 24 || year > 34) {
+                          return 'Geçerli bir yıl giriniz (24-34)';
                         }
                         return null;
                       },
@@ -196,6 +209,10 @@ class _EditCardPageState extends State<EditCardPage> {
                         ),
                       ),
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'CVC gerekli';
