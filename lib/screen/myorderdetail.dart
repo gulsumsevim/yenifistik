@@ -207,13 +207,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              // Ürünü hazırla işlemini burada yapabilirsiniz.
-              prepareProduct(product);
-            },
-            child: Text('Ürünü Hazırla'),
-          ),
+          
         ],
       ),
     ),

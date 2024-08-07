@@ -272,13 +272,13 @@ class _EditFieldPageState extends State<EditFieldPage> {
                       backgroundColor: Colors.grey,
                     ),
                   ),
-                  ElevatedButton(
+              /*    ElevatedButton(
                     onPressed: _showLocation,
                     child: Text('Konumu Gör'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                     ),
-                  ),
+                  ),*/
                 ],
               ),
               SizedBox(height: 20),
