@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fistikpazar/models/productdetail_model.dart';
 import 'package:fistikpazar/services/products_service.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -17,7 +16,7 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   final TextEditingController commentController = TextEditingController();
   double rating = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +28,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
-        
           IconButton(
             icon: Icon(Icons.shopping_cart, color: Colors.black),
             onPressed: () async {
@@ -58,7 +56,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             return Center(child: Text('Ürün bulunamadı.'));
           } else {
             final product = snapshot.data!;
-            List<String> images = [if (product.image != null) product.image!] + (product.additionalImages?.map((img) => img.url!).toList() ?? []);
+            List<String> images = [if (product.image != null) product.image!] +
+                (product.additionalImages?.map((img) => img.url!).toList() ?? []);
 
             return SingleChildScrollView(
               child: Padding(
@@ -69,7 +68,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     Center(
                       child: images.isNotEmpty
                           ? CarouselSlider(
-                              options: CarouselOptions(height: 200.0, enableInfiniteScroll: false, enlargeCenterPage: true),
+                              options: CarouselOptions(
+                                  height: 200.0, enableInfiniteScroll: false, enlargeCenterPage: true),
                               items: images.map((imageUrl) {
                                 return Builder(
                                   builder: (BuildContext context) {
@@ -101,7 +101,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     Divider(),
                     _buildSectionTitle('Genel Bilgiler'),
                     _buildDetailBox('Kategori', product.category ?? 'Belirtilmemiş'),
-                    
                     _buildDetailBox('Hasat', product.harvest?.toString() ?? '0'),
                     _buildDetailBox('Stok', product.stock?.toString() ?? '0'),
                     Divider(),
@@ -133,7 +132,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                         'Müşteri: ${comment.customerName ?? 'Bilinmiyor'}',
                                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                       ),
-                                      
                                       Text(
                                         'Yorum: ${comment.commentt ?? 'Yorum yok'}',
                                         style: TextStyle(fontSize: 16),
@@ -204,9 +202,21 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
         ),
         SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          
+        RatingBar.builder(
+          initialRating: rating,
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.amber,
+          ),
+          onRatingUpdate: (newRating) {
+            setState(() {
+              rating = newRating;
+            });
+          },
         ),
         SizedBox(height: 8),
         Row(
@@ -230,7 +240,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     SnackBar(content: Text('Yorum eklendi!')),
                   );
                   commentController.clear();
-                  this.rating = 0;
+                  setState(() {
+                    rating = 0;
+                  });
                 } catch (error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Hata: $error')),
