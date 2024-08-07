@@ -1,10 +1,13 @@
 import 'package:fistikpazar/models/orderdetail_model.dart';
+import 'package:fistikpazar/screen/productdetails.dart';
 import 'package:fistikpazar/services/order_services.dart';
 import 'package:fistikpazar/services/orderdetail_services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 class OrderDetailScreen extends StatefulWidget {
   final int orderId;
@@ -273,7 +276,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ),
             ),
             SizedBox(width: 10),
-            
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductDetailPage(productId: product.productId!)),
+                );
+              },
+              child: Text('Ürünü Gör'),
+            ),
           ],
         ),
       ),

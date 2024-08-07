@@ -2,6 +2,7 @@ import 'package:fistikpazar/services/basket_services.dart';
 import 'package:flutter/material.dart';
 import 'package:fistikpazar/models/favorite_model.dart';
 import 'package:fistikpazar/services/favorite_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoritesScreen extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   late FavoritesService _favoritesService;
   late Future<List<Favorites>> _favoritesFuture;
   late BasketService _basketService;
+  Set<int> likedProducts = Set<int>();
 
   @override
   void initState() {
@@ -19,6 +21,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     _favoritesService = FavoritesService();
     _favoritesFuture = _favoritesService.getAllFavorites();
     _basketService = BasketService();
+    _loadLikedProducts();
+  }
+
+  Future<void> _loadLikedProducts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final likedProductIds = prefs.getStringList('likedProducts') ?? [];
+    setState(() {
+      likedProducts = likedProductIds.map((id) => int.parse(id)).toSet();
+    });
   }
 
   Future<void> _removeFavorite(int productId) async {
@@ -26,12 +37,20 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       await _favoritesService.removeFavorite(productId);
       setState(() {
         _favoritesFuture = _favoritesService.getAllFavorites();
+        likedProducts.remove(productId);
+        _saveLikedProducts();
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Favori ürünü silerken bir hata oluştu: $e')),
       );
     }
+  }
+
+  Future<void> _saveLikedProducts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final likedProductIds = likedProducts.map((id) => id.toString()).toList();
+    prefs.setStringList('likedProducts', likedProductIds);
   }
 
   Future<void> _addToBasket(int productId) async {

@@ -13,6 +13,7 @@ class ProductService {
   static const String removeLikeFromProductUrl = '$baseUrl/Customer/RemoveLikeTheProduct';
   static const String addCommentToProductUrl = '$baseUrl/Customer/AddCommentToProduct';
   static const String isProductFavoriteUrl = '$baseUrl/Customer/IsProductFavorite';
+  static const String getLikedProductsUrl = '$baseUrl/Customer/GetMyLikedProduct'; // Eklenen URL
 
   static Future<List<Products>> getAllProducts() async {
     Map<String, dynamic> requestBody = {
@@ -185,4 +186,29 @@ class ProductService {
       throw Exception('Yorum ekleme işlemi başarısız oldu. Hata kodu: ${response.statusCode}, Hata mesajı: ${response.body}');
     }
   }
+  static Future<List<int>> getLikedProducts() async {
+    final String? token = await ApiService.getToken();
+    if (token == null) {
+      throw Exception('Token alınamadı');
+    }
+
+    final response = await http.get(
+      Uri.parse(getLikedProductsUrl),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      if (jsonData['products'] != null) {
+        return (jsonData['products'] as List).map((item) => item['productId'] as int).toList();
+      } else {
+        return [];
+      }
+    } else {
+      throw Exception('Favori ürünler yüklenemedi. Hata kodu: ${response.statusCode}, Hata mesajı: ${response.body}');
+    }
+  }
+
 }

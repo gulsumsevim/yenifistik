@@ -34,17 +34,18 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Future<void> _loadLikedProducts() async {
-    final prefs = await SharedPreferences.getInstance();
-    final likedProductIds = prefs.getStringList('likedProducts') ?? [];
-    setState(() {
-      likedProducts = likedProductIds.map((id) => int.parse(id)).toSet();
-    });
+    try {
+      final likedProductIds = await ProductService.getLikedProducts();
+      setState(() {
+        likedProducts = likedProductIds.toSet();
+      });
+    } catch (e) {
+      print('Favori ürünler yüklenirken bir hata oluştu: $e');
+    }
   }
 
   Future<void> _saveLikedProducts() async {
-    final prefs = await SharedPreferences.getInstance();
-    final likedProductIds = likedProducts.map((id) => id.toString()).toList();
-    prefs.setStringList('likedProducts', likedProductIds);
+    // Bu fonksiyon artık gerekli değil, API'yi kullanıyoruz
   }
 
   void _addToBasket(BuildContext context, int productId) async {
@@ -68,7 +69,6 @@ class _ProductPageState extends State<ProductPage> {
         likedProducts.add(productId);
       }
     });
-    await _saveLikedProducts();
 
     try {
       if (likedProducts.contains(productId)) {
@@ -174,6 +174,7 @@ class _ProductPageState extends State<ProductPage> {
                           builder: (context) => ProductDetailPage(productId: filteredProducts[index].productId!),
                         ),
                       ).then((_) {
+                        _loadLikedProducts(); // Refresh the liked products when returning from the detail page
                         setState(() {}); // Refresh the state when returning from the detail page
                       });
                     },

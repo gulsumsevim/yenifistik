@@ -69,7 +69,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     Center(
                       child: images.isNotEmpty
                           ? CarouselSlider(
-                              options: CarouselOptions(height: 400.0, enableInfiniteScroll: false, enlargeCenterPage: true),
+                              options: CarouselOptions(height: 200.0, enableInfiniteScroll: false, enlargeCenterPage: true),
                               items: images.map((imageUrl) {
                                 return Builder(
                                   builder: (BuildContext context) {
@@ -133,10 +133,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                         'Müşteri: ${comment.customerName ?? 'Bilinmiyor'}',
                                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                       ),
-                                      Text(
-                                        'Puan: ${comment.point?.toStringAsFixed(1) ?? '0.0'}',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
+                                      
                                       Text(
                                         'Yorum: ${comment.commentt ?? 'Yorum yok'}',
                                         style: TextStyle(fontSize: 16),
