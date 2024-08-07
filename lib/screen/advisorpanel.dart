@@ -90,7 +90,7 @@ class _PanelimPageState extends State<PanelimPage> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _fields.isEmpty
-              ? Center(child: Text('Hiç arazi bulunamadı.'))
+              ? Center(child: Text('Danışman talebiniz bulunamadı.'))
               : Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(

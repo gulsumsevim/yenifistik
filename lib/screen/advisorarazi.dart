@@ -57,7 +57,7 @@ class _ArazilerimPageState extends State<ArazilerimPage> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _fields.isEmpty
-              ? Center(child: Text('Hiç arazi bulunamadı.'))
+              ? Center(child: Text('Henüz bir alan eklememişsiniz.'))
               : ListView.builder(
                   itemCount: _fields.length,
                   itemBuilder: (context, index) {

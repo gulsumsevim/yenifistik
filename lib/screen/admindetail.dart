@@ -107,7 +107,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
             buildDetailRow(Icons.email, 'E-posta:', userDetail['email'] ?? ''),
             buildDetailRow(Icons.phone, 'Telefon:', userDetail['phone'] ?? ''),
             buildDetailRow(Icons.info, 'Hakkında:', userDetail['description'] ?? 'Hakkında bilgi bulunmamaktadır.'),
-            buildDetailRow(Icons.date_range, 'Kayıt Tarihi:', DateFormat.yMMM().format(DateTime.parse(userDetail['createdDate']))),
+            
           ],
         ),
       ),

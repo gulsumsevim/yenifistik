@@ -13,7 +13,7 @@ class AdminPage extends StatefulWidget {
 class _AdminPageState extends State<AdminPage> {
   late Future<List<User>> futureUsers;
   String searchKeyword = "";
-  int filterRoleId = 0; // 0 = Tüm Kullanıcılar, 1 = Müşteriler, 2 = Üreticiler, 3 = Danışmanlar, 4 = Adminler
+  int filterRoleId = 0; // 0 = Tüm Kullanıcılar, 1 = Müşteriler, 2 = Üreticiler, 3 = Danışmanlar, 
 
   @override
   void initState() {
@@ -68,8 +68,7 @@ class _AdminPageState extends State<AdminPage> {
         return 'Üretici';
       case 3:
         return 'Danışman';
-      case 4:
-        return 'Admin';
+      
       default:
         return 'Bilinmiyor';
     }
@@ -96,7 +95,7 @@ class _AdminPageState extends State<AdminPage> {
                       DropdownMenuItem(value: 1, child: Text('Müşteriler')),
                       DropdownMenuItem(value: 2, child: Text('Üreticiler')),
                       DropdownMenuItem(value: 3, child: Text('Danışmanlar')),
-                      DropdownMenuItem(value: 4, child: Text('Adminler')),
+                      
                     ],
                     onChanged: (value) {
                       setState(() {
