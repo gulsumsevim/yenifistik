@@ -101,7 +101,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     Divider(),
                     _buildSectionTitle('Genel Bilgiler'),
                     _buildDetailBox('Kategori', product.category ?? 'Belirtilmemiş'),
-                    _buildDetailBox('Alan', product.field ?? 'Belirtilmemiş'),
+                    
                     _buildDetailBox('Hasat', product.harvest?.toString() ?? '0'),
                     _buildDetailBox('Stok', product.stock?.toString() ?? '0'),
                     Divider(),
