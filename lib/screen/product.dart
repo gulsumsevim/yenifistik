@@ -7,7 +7,7 @@ import 'package:fistikpazar/screen/product_filters_dialog.dart';
 import 'package:fistikpazar/screen/ui_util.dart';
 import 'package:fistikpazar/services/products_service.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 void main() {
   runApp(ProductPage());
