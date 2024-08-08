@@ -249,19 +249,24 @@ class _PanelScreenState extends State<PanelimScreen> {
                                                 sideTitles: SideTitles(
                                                   showTitles: true,
                                                   getTitlesWidget: (double value, TitleMeta meta) {
+                                                    final daysOfWeek = ['pazartesi', 'salı', 'çarşamba', 'perşembe', 'cuma', 'cumartesi', 'pazar'];
                                                     final day = daysOfWeek[value.toInt()];
                                                     return Padding(
                                                       padding: const EdgeInsets.only(top: 8.0),
-                                                      child: Text(
-                                                        day,
-                                                        style: TextStyle(
-                                                          fontSize: 10,
-                                                          color: Colors.black,
+                                                      child: Transform.rotate(
+                                                        angle: -0.5, // 45 derece döndür
+                                                        child: Text(
+                                                          day,
+                                                          style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: Colors.black,
+                                                          ),
+                                                          textAlign: TextAlign.center,
                                                         ),
-                                                        textAlign: TextAlign.center,
                                                       ),
                                                     );
                                                   },
+                                                  reservedSize: 40, // Genişliği arttırmak için
                                                 ),
                                               ),
                                             ),
