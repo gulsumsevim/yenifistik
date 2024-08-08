@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserDetailScreen extends StatefulWidget {
@@ -95,19 +94,31 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             userDetail['profileImage'] != null && userDetail['profileImage'] != ''
-                ? Image.network(userDetail['profileImage'], fit: BoxFit.cover, width: 150, height: 150)
+                ? Image.network(
+                    userDetail['profileImage'],
+                    fit: BoxFit.cover,
+                    width: 150,
+                    height: 150,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 150,
+                        height: 150,
+                        color: Colors.grey,
+                        child: Center(child: Icon(Icons.person, size: 50, color: Colors.white)),
+                      );
+                    },
+                  )
                 : Container(
                     width: 150,
                     height: 150,
                     color: Colors.grey,
-                    child: Center(child: Icon(Icons.image, size: 50)),
+                    child: Center(child: Icon(Icons.person, size: 50, color: Colors.white)),
                   ),
             SizedBox(height: 20),
             buildDetailRow(Icons.person, 'Kullanıcı adı:', '${userDetail['name']} ${userDetail['surname']}'),
             buildDetailRow(Icons.email, 'E-posta:', userDetail['email'] ?? ''),
             buildDetailRow(Icons.phone, 'Telefon:', userDetail['phone'] ?? ''),
             buildDetailRow(Icons.info, 'Hakkında:', userDetail['description'] ?? 'Hakkında bilgi bulunmamaktadır.'),
-            
           ],
         ),
       ),
