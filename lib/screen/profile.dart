@@ -56,12 +56,12 @@ class ProfilePage extends StatelessWidget {
             label: 'Siparişlerim',
             destination: OrderListScreen(),
           ),
-          _buildProfileButton(
+        /*  _buildProfileButton(
             context,
             icon: Icons.credit_card,
             label: 'Kartlarım',
             destination: CardListPage(),
-          ),
+          ),*/
           _buildProfileButton(
             context,
             icon: Icons.comment,
