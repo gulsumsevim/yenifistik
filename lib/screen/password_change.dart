@@ -143,6 +143,9 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen yeni şifrenizi girin';
                   }
+                  if (value == _oldPasswordController.text) {
+                    return 'Yeni şifre eski şifre ile aynı olamaz';
+                  }
                   return null;
                 },
               ),
