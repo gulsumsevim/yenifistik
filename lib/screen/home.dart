@@ -35,109 +35,115 @@ class CustomerHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: _isLoggedIn(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Bir hata oluştu.'));
-        } else {
-          bool isLoggedIn = snapshot.data ?? false;
-
-          return FutureBuilder<int?>(
-            future: _getRoleId(),
-            builder: (context, roleSnapshot) {
-              if (roleSnapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (roleSnapshot.hasError) {
-                return Center(child: Text('Bir hata oluştu.'));
-              } else {
-                int? roleId = roleSnapshot.data;
-
-                return MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  home: Scaffold(
-                    body: PageView(
-                      controller: _pageController,
-                      children: <Widget>[
-                        ProductPage(),
-                        isLoggedIn ? BasketsPage() : LoginScreen(),
-                        isLoggedIn ? FavoritesScreen() : LoginScreen(), // Show login screen if not logged in
-                        isLoggedIn ? ProfilePage() : LoginScreen(), // Show login screen if not logged in
-                        if (roleId == 2) isLoggedIn ? PanelPage() : LoginScreen(), // Farmer panel
-                        if (roleId == 3) isLoggedIn ? AdvisorPage() : LoginScreen(), // Advisor panel
-                        if (roleId == 7) isLoggedIn ? AdminPage() : LoginScreen(), // Admin panel
-                      ],
-                    ),
-                    bottomNavigationBar: CurvedNavigationBar(
-                      backgroundColor: Colors.orange,
-                      buttonBackgroundColor: Colors.white,
-                      color: const Color.fromARGB(255, 255, 240, 219),
-                      height: 72,
-                      items: <Widget>[
-                        Icon(
-                          Icons.home,
-                          size: 30,
-                          color: Colors.red,
-                        ),
-                        Icon(
-                          Icons.add_shopping_cart,
-                          size: 30,
-                          color: Colors.deepPurpleAccent,
-                        ),
-                        Icon(
-                          Icons.favorite,
-                          size: 30,
-                          color: Colors.green,
-                        ),
-                        Icon(
-                          Icons.person,
-                          size: 30,
-                          color: Colors.blue,
-                        ),
-                        if (roleId == 2)
-                          Icon(
-                            CupertinoIcons.rectangle_grid_2x2,
-                            size: 30,
-                            color: Colors.green,
-                          ),
-                        if (roleId == 3)
-                          Icon(
-                            Icons.assessment,
-                            size: 30,
-                            color: Colors.green,
-                          ),
-                        if (roleId == 7)
-                          Icon(
-                            Icons.admin_panel_settings,
-                            size: 30,
-                            color: Colors.green,
-                          ),
-                      ],
-                      onTap: (index) {
-                        int pageIndex = index;
-                        if (roleId == 2 && index == 4) {
-                          pageIndex = 4; // Farmer panel
-                        } else if (roleId == 3 && index == 4) {
-                          pageIndex = 5; // Advisor panel
-                        } else if (roleId == 7 && index == 4) {
-                          pageIndex = 6; // Admin panel
-                        } else if (index >= 4) {
-                          return; // Invalid access for non-authorized roles
-                        }
-                        _pageController.animateToPage(pageIndex,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOut);
-                      },
-                    ),
-                  ),
-                );
-              }
-            },
-          );
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        // Uygulamadan çıkmak için true döndürüyoruz.
+        return true;
       },
+      child: FutureBuilder<bool>(
+        future: _isLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Bir hata oluştu.'));
+          } else {
+            bool isLoggedIn = snapshot.data ?? false;
+
+            return FutureBuilder<int?>(
+              future: _getRoleId(),
+              builder: (context, roleSnapshot) {
+                if (roleSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (roleSnapshot.hasError) {
+                  return Center(child: Text('Bir hata oluştu.'));
+                } else {
+                  int? roleId = roleSnapshot.data;
+
+                  return MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    home: Scaffold(
+                      body: PageView(
+                        controller: _pageController,
+                        children: <Widget>[
+                          ProductPage(),
+                          isLoggedIn ? BasketsPage() : LoginScreen(),
+                          isLoggedIn ? FavoritesScreen() : LoginScreen(), // Show login screen if not logged in
+                          isLoggedIn ? ProfilePage() : LoginScreen(), // Show login screen if not logged in
+                          if (roleId == 2) isLoggedIn ? PanelPage() : LoginScreen(), // Farmer panel
+                          if (roleId == 3) isLoggedIn ? AdvisorPage() : LoginScreen(), // Advisor panel
+                          if (roleId == 7) isLoggedIn ? AdminPage() : LoginScreen(), // Admin panel
+                        ],
+                      ),
+                      bottomNavigationBar: CurvedNavigationBar(
+                        backgroundColor: Colors.orange,
+                        buttonBackgroundColor: Colors.white,
+                        color: const Color.fromARGB(255, 255, 240, 219),
+                        height: 72,
+                        items: <Widget>[
+                          Icon(
+                            Icons.home,
+                            size: 30,
+                            color: Colors.red,
+                          ),
+                          Icon(
+                            Icons.add_shopping_cart,
+                            size: 30,
+                            color: Colors.deepPurpleAccent,
+                          ),
+                          Icon(
+                            Icons.favorite,
+                            size: 30,
+                            color: Colors.green,
+                          ),
+                          Icon(
+                            Icons.person,
+                            size: 30,
+                            color: Colors.blue,
+                          ),
+                          if (roleId == 2)
+                            Icon(
+                              CupertinoIcons.rectangle_grid_2x2,
+                              size: 30,
+                              color: Colors.green,
+                            ),
+                          if (roleId == 3)
+                            Icon(
+                              Icons.assessment,
+                              size: 30,
+                              color: Colors.green,
+                            ),
+                          if (roleId == 7)
+                            Icon(
+                              Icons.admin_panel_settings,
+                              size: 30,
+                              color: Colors.green,
+                            ),
+                        ],
+                        onTap: (index) {
+                          int pageIndex = index;
+                          if (roleId == 2 && index == 4) {
+                            pageIndex = 4; // Farmer panel
+                          } else if (roleId == 3 && index == 4) {
+                            pageIndex = 5; // Advisor panel
+                          } else if (roleId == 7 && index == 4) {
+                            pageIndex = 6; // Admin panel
+                          } else if (index >= 4) {
+                            return; // Invalid access for non-authorized roles
+                          }
+                          _pageController.animateToPage(pageIndex,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut);
+                        },
+                      ),
+                    ),
+                  );
+                }
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }
