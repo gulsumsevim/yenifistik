@@ -5,6 +5,7 @@ import 'package:fistikpazar/services/basket_services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class BasketsPage extends StatefulWidget {
   @override
@@ -234,7 +235,7 @@ class _BasketsPageState extends State<BasketsPage> {
                                     ),
                                     SizedBox(height: 4),
                                     Text('Miktar: ${product.numberOfProduct}'),
-                                    Text('${product.price.toStringAsFixed(2)} ₺'),
+                                    Text('${NumberFormat('###,###', 'tr_TR').format(product.price)} ₺'),
                                   ],
                                 ),
                                 Spacer(),
@@ -318,7 +319,7 @@ class _BasketsPageState extends State<BasketsPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Toplam Fiyat:'),
-                          Text('${_calculateTotalPrice(_baskets).toStringAsFixed(2)} ₺'),
+                          Text('${NumberFormat('###,###', 'tr_TR').format(_calculateTotalPrice(_baskets))} ₺'),
                         ],
                       ),
                       SizedBox(height: 16.0),
