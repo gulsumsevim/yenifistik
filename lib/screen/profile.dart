@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fistikpazar/screen/adress.dart';
-import 'package:fistikpazar/screen/cardpage.dart';
+/*import 'package:fistikpazar/screen/cardpage.dart';*/
 import 'package:fistikpazar/screen/commentpage.dart';
 import 'package:fistikpazar/screen/order.dart';
 import 'package:fistikpazar/screen/password_change.dart';
